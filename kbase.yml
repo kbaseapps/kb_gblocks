@@ -2,7 +2,7 @@ module-name:
     kb_gblocks
 
 module-description:
-    A KBase module
+    Trim a Multiple Sequence Alignment (MSA) to remove hypervariable (gappy) regions with Gblocks
 
 service-language:
     python
