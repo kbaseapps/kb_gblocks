@@ -50,22 +50,72 @@
             "optional": true,
             "advanced": true,
             "allow_multiple": false,
+            "default_values": [ "1" ],
+            "field_type": "text",
+            "text_options": {
+		"validate_as": "int",
+		"min_integer": "0",
+		"max_integer": "2",
+            }
+        },
+        {
+            "id": "min_seqs_for_conserved",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "0" ],
+            "field_type": "text",
+            "text_options": {
+		"validate_as": "int",
+		"min_integer": "0"
+            }
+        },
+        {
+            "id": "min_seqs_for_flank",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "0" ],
+            "field_type": "text",
+            "text_options": {
+		"validate_as": "int",
+		"min_integer": "0"
+            }
+        },
+        {
+            "id": "max_pos_contig_nonconserved",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "8" ],
+            "field_type": "text",
+            "text_options": {
+		"validate_as": "int",
+		"min_integer": "1"
+            }
+        },
+        {
+            "id": "min_block_len",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "10" ],
+            "field_type": "text",
+            "text_options": {
+		"validate_as": "int",
+		"min_integer": "1"
+            }
+        },
+        {
+            "id": "remove_mask_positions_flag",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
             "default_values": [ "" ],
             "field_type": "checkbox",
             "checkbox_options": {
 		"checked_value": "1",
 		"unchecked_value": "0"
-            }
-        },
-        {
-            "id": "input_mask_name",
-            "optional": true,
-            "advanced": true,
-            "allow_multiple": false,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": [ "KBaseTrees.MSA" ]
             }
         }
 
@@ -97,8 +147,24 @@
                     "target_property": "trim_level"
                 },
                 {
-                    "input_parameter": "input_mask_name",
-                    "target_property": "input_mask_name"
+                    "input_parameter": "min_seqs_for_conserved",
+                    "target_property": "min_seqs_for_conserved"
+                },
+                {
+                    "input_parameter": "min_seqs_for_flank",
+                    "target_property": "min_seqs_for_flank"
+                },
+                {
+                    "input_parameter": "max_seqs_for_flank",
+                    "target_property": "max_seqs_for_flank"
+                },
+                {
+                    "input_parameter": "min_block_len",
+                    "target_property": "min_block_len"
+                },
+                {
+                    "input_parameter": "remove_mask_positions_flag",
+                    "target_property": "remove_mask_positions_flag"
                 }
             ],
             "output_mapping": [

@@ -44,20 +44,40 @@ parameters :
             Output Tree
         short-hint : |
             Phylogenetic Tree output.  Data type is Tree.
-    input_mask_name:
-        ui-name : |
-            Input Mask MSA
-        short-hint : |
-            Multiple Sequence Alignment to use to mask regions for trimming.  Data type is MSA.
     trim_level:
         ui-name : |
             Trim Level
         short-hint : |
-            ON is 1/2 occupancy, Off is All occupancy
+            0=No gaps permitted, 1=Half occupancy, 2=Gaps ignored
+    min_seqs_for_conserved:
+        ui-name : |
+            Min Seqs for Conserved Pos
+        short-hint : |
+            Minimum number of sequences required with a conserved residue before a position (column) is considered a "Conserved Position"; 0=Use MSA-derived default (e.g. for 14 seqs, default is 8)
+    min_seqs_for_flank:
+        ui-name : |
+            Min Seqs for Flank Pos
+        short-hint : |
+            Minimum number of sequences required with a residue in a position (column) flanking a conserved position before being considered a "Flank Position"; 0=Use MSA-derived default (e.g. for 14 seqs, default is 11)
+    max_pos_contig_nonconserved:
+        ui-name : |
+            Max Num Non-Conserved Pos
+        short-hint : |
+            Maximum number of non-conserved positions (columns) that may be included in a block; 8=default
+    min_block_len:
+        ui-name : |
+            Min Block Len
+        short-hint : |
+            Minimum number of positions (columns) required to include a block in the output MSA; 10=default
+    remove_masked_positions_flag:
+        ui-name : |
+            Remove Masked Pos?
+        short-hint : |
+            If first row of MSA has "X" masking characters, remove those positions (columns) from output MSA; Usually used for hypervariable regions (e.g. 16S); OFF=default.
 
 description : |
     <p>This method trims Multiple Sequence Alignments (MSAs) to capture the conserved blocks that may be more reliable regions from which to compare evolutionary rates, such as for tree building.  It uses the method Gblocks.</p>
-    <p>Gblocks 0.91B from http://molevol.cmima.csic.es/castresana/Gblocks.html</p>
+    <p>Gblocks 0.91b from http://molevol.cmima.csic.es/castresana/Gblocks.html</p>
     <p>Please cite:</p>
     <p><A HREF="http://sysbio.oxfordjournals.org/content/56/4/564.long">Talavera G1, Castresana J. (2007) Improvement of phylogenies after removing divergent and ambiguously aligned blocks from protein sequence alignments. Syst Biol. 2007 Aug;56(4):564-77.</A> doi:10.1080/10635150701472164</p>
     <p><A HREF="http://mbe.oxfordjournals.org/content/17/4/540.long">Castresana J. (2000) Selection of conserved blocks from multiple alignments for their use in phylogenetic analysis. Mol Biol Evol. 2000 Apr;17(4):540-52.</A> PMID: 10742046</p>
