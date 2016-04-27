@@ -282,7 +282,7 @@ class kb_gblocks:
             for row_id in row_order:
                 #self.log(console,"row_id: '"+row_id+"'")  # DEBUG
                 #self.log(console,"alignment: '"+MSA_in['alignment'][row_id]+"'")  # DEBUG
-            # using SeqIO makes multiline sequences.  FastTree doesn't like
+            # using SeqIO makes multiline sequences.  (Gblocks doesn't care, but FastTree doesn't like multiline, and I don't care enough to change code)
                 #record = SeqRecord(Seq(MSA_in['alignment'][row_id]), id=row_id, description=default_row_labels[row_id])
                 #records.append(record)
             #SeqIO.write(records, input_MSA_file_path, "fasta")
@@ -309,31 +309,6 @@ class kb_gblocks:
             raise ValueError('Cannot yet handle input_name type of: '+type_name)
 
 
-        # Get start tree (if any)
-        #
-        if 'intree' in params and params['intree'] != None:
-            try:
-                ws = workspaceService(self.workspaceURL, token=ctx['token'])
-                objects = ws.get_objects([{'ref': params['workspace_name']+'/'+params['intree']}])
-                data = objects[0]['data']
-                info = objects[0]['info']
-                input_type_name = info[2].split('.')[1].split('-')[0]
-
-            except Exception as e:
-                raise ValueError('Unable to fetch input_name object from workspace: ' + str(e))
-                #to get the full stack trace: traceback.format_exc()
-            
-            if input_type_name == 'Tree':
-                tree_in = data
-                input_tree_file_path = os.path.join(self.scratch, params['intree']+".newick")
-                self.log(console, 'writing intree file: '+input_tree_file_path)
-                input_tree_file_handle = open(input_tree_file_path, 'w', 0)
-                input_tree_file_handle.write(tree_in['tree'])
-                input_tree_file_handle.close()
-            else:
-                raise ValueError('Cannot yet handle intree type of: '+type_name)
-
-
         # DEBUG: check the MSA file contents
 #        with open(input_MSA_file_path, 'r', 0) as input_MSA_file_handle:
 #            for line in input_MSA_file_handle:
@@ -343,6 +318,43 @@ class kb_gblocks:
 
         # validate input data
         #
+        N_seqs = 0
+        L_first_seq = 0
+        with open(input_MSA_file_path, 'r', 0) as input_MSA_file_handle:
+            for line in input_MSA_file_handle:
+                if line.startswith('>'):
+                    N_seqs += 1
+                    if L_first_seq == 0:
+                        for c in line:
+                            if c != '-' and c != "\n":
+                                L_first_seq += 1
+        # min_seqs_for_conserved
+        if params['min_seqs_for_conserved'] < int(0.5*N_seqs)+1:
+            self.log(invalid_msgs,"Min Seqs for Conserved Pos ("+str(params['min_seqs_for_conserved'])+") must be >= N/2+1 (N="+str(N_seqs)+", N/2+1="+str(int(0.5*N_seqs)+1)+")\n")
+        if params['min_seqs_for_conserved'] > params['min_seqs_for_flank']:
+            self.log(invalid_msgs,"Min Seqs for Conserved Pos ("+str(params['min_seqs_for_conserved'])+") must be <= Min Seqs for Flank Pos ("+str(params['min_seqs_for_flank'])+")\n")
+
+        # min_seqs_for_flank
+        if params['min_seqs_for_flank'] > N_seq:
+            self.log(invalid_msgs,"Min Seqs for Flank Pos ("+str(params['min_seqs_for_flank'])+") must be <= N (N="+str(N_seqs)+")\n")
+
+        # max_pos_contig_nonconserved
+        if params['max_pos_contig_nonconserved'] < 0:
+            self.log(invalid_msgs,"Max Num Non-Conserved Pos ("+str(params['max_pos_contig_nonconserved'])+") must be >= 0"+"\n")
+        if params['max_pos_contig_nonconserved'] > L_first_seq or params['max_pos_contig_nonconserved'] >= 32000:
+            self.log(invalid_msgs,"Max Num Non-Conserved Pos ("+str(params['max_pos_contig_nonconserved'])+") must be <= L first seq ("+str(L_first_seq)+") and < 32000\n")
+
+        # min_block_len
+        if params['min_block_len'] < 2:
+            self.log(invalid_msgs,"Min Block Len ("+str(params['min_block_len'])+") must be >= 2"+"\n")
+        if params['min_block_len'] > L_first_seq or params['max_block_len'] >= 32000:
+            self.log(invalid_msgs,"Min Block Len ("+str(params['min_block_len'])+") must be <= L first seq ("+str(L_first_seq)+") and < 32000\n")
+
+        # trim_level
+        if params['trim_level'] < 0 or params['trim_level'] > 2:
+            self.log(invalid_msgs,"Trim Level ("+str(params['trim_level'])+") must be >= 0 and <= 2"+"\n")
+
+
         if len(invalid_msgs) > 0:
 
             # load the method provenance from the context object
@@ -454,15 +466,45 @@ class kb_gblocks:
         #
         #  for "0.5" gaps: cat "o\n<MSA_file>\nb\n5\ng\nm\nq\n" | Gblocks
         #  for "all" gaps: cat "o\n<MSA_file>\nb\n5\n5\ng\nm\nq\n" | Gblocks
-        p.stdin.write("o\n")
-        p.stdin.write(input_MSA_file_path+"\n")
-        if 'arg' in params and params['arg'] != None and params['arg'] != 0:
-             p.stdin.write("b\n")
-        
 
-        with open(input_MSA_file_path,'r',0) as input_MSA_file_handle:
-            for line in input_MSA_file_handle:
-                p.stdin.write(line)
+        p.stdin.write("o"+"\n")  # open MSA file
+        p.stdin.write(input_MSA_file_path+"\n")
+
+        if 'trim_level' in params and params['trim_level'] != None and params['trim_level'] != 0:
+             p.stdin.write("b"+"\n")
+             if params['trim_level'] >= 1:
+                  p.stdin.write("5"+"\n")  # set to "half"
+                  if params['trim_level'] == 2:
+                       p.stdin.write("5"+"\n")  # set to "all"
+             p.stdin.write("m"+"\n")
+
+        # flank must precede conserved because it acts us upper bound for acceptable conserved values
+        if 'min_seqs_for_flank' in params and params['min_seqs_for_flank'] != None and params['min_seqs_for_flank'] != 0:
+             p.stdin.write("b"+"\n")
+             p.stdin.write("2"+"\n")
+             p.stdin.write(str(params['min_seqs_for_flank'])+"\n")
+             p.stdin.write("m"+"\n")
+
+        if 'min_seqs_for_conserved' in params and params['min_seqs_for_conserved'] != None and params['min_seqs_for_conserved'] != 0:
+             p.stdin.write("b"+"\n")
+             p.stdin.write("1"+"\n")
+             p.stdin.write(str(params['min_seqs_for_conserved'])+"\n")
+             p.stdin.write("m"+"\n")
+
+        if 'max_pos_contig_nonconserved' in params and params['max_pos_contig_nonconserved'] != None and params['max_pos_contig_nonconserved'] > -1:
+             p.stdin.write("b"+"\n")
+             p.stdin.write("3"+"\n")
+             p.stdin.write(str(params['max_pos_contig_nonconserved'])+"\n")
+             p.stdin.write("m"+"\n")
+
+        if 'min_block_len' in params and params['min_block_len'] != None and params['min_block_len'] != 0:
+             p.stdin.write("b"+"\n")
+             p.stdin.write("4"+"\n")
+             p.stdin.write(str(params['min_block_len'])+"\n")
+             p.stdin.write("m"+"\n")
+        
+        p.stdin.write("g"+"\n")  # get blocks
+        p.stdin.write("q"+"\n")  # quit
         p.stdin.close()
         p.wait()
 
@@ -483,13 +525,17 @@ class kb_gblocks:
             raise ValueError('Error running GBLOCKS, return code: '+str(p.returncode) + 
                 '\n\n'+ '\n'.join(console))
 
-        # Check that FASTREE produced output
+        # Check that GBLOCKS produced output
         #
-        if not os.path.isfile(output_newick_file_path):
-            raise ValueError("failed to create GBLOCKS output: "+output_newick_file_path)
-        elif not os.path.getsize(output_newick_file_path) > 0:
-            raise ValueError("created empty file for GBLOCKS output: "+output_newick_file_path)
+        if not os.path.isfile(output_MSA_file_path):
+            raise ValueError("failed to create GBLOCKS output: "+output_MSA_file_path)
+        elif not os.path.getsize(output_MSA_file_path) > 0:
+            raise ValueError("created empty file for GBLOCKS output: "+output_MSA_file_path)
 
+
+        # reformat output to MSA and check that output not empty (often happens when param combinations don't produce viable blocks
+        #
+# HERE
 
         # load the method provenance from the context object
         #
@@ -500,8 +546,6 @@ class kb_gblocks:
         # add additional info to provenance here, in this case the input data object reference
         provenance[0]['input_ws_objects'] = []
         provenance[0]['input_ws_objects'].append(params['workspace_name']+'/'+params['input_name'])
-        if 'intree' in params and params['intree'] != None:
-            provenance[0]['input_ws_objects'].append(params['workspace_name']+'/'+params['intree'])
         provenance[0]['service'] = 'kb_gblocks'
         provenance[0]['method'] = 'run_Gblocks'
 
