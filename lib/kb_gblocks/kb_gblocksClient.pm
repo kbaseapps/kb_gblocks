@@ -129,9 +129,13 @@ Gblocks_Params is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a kb_gblocks.workspace_name
 	desc has a value which is a string
 	input_name has a value which is a kb_gblocks.data_obj_name
-	input_mask_name has a value which is a kb_gblocks.data_obj_name
 	output_name has a value which is a kb_gblocks.data_obj_name
 	trim_level has a value which is an int
+	min_seqs_for_conserved has a value which is an int
+	min_seqs_for_flank has a value which is an int
+	max_pos_contig_nonconserved has a value which is an int
+	min_block_len has a value which is an int
+	remove_mask_positions_flag has a value which is an int
 workspace_name is a string
 data_obj_name is a string
 Gblocks_Output is a reference to a hash where the following keys are defined:
@@ -152,9 +156,13 @@ Gblocks_Params is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a kb_gblocks.workspace_name
 	desc has a value which is a string
 	input_name has a value which is a kb_gblocks.data_obj_name
-	input_mask_name has a value which is a kb_gblocks.data_obj_name
 	output_name has a value which is a kb_gblocks.data_obj_name
 	trim_level has a value which is an int
+	min_seqs_for_conserved has a value which is an int
+	min_seqs_for_flank has a value which is an int
+	max_pos_contig_nonconserved has a value which is an int
+	min_block_len has a value which is an int
+	remove_mask_positions_flag has a value which is an int
 workspace_name is a string
 data_obj_name is a string
 Gblocks_Output is a reference to a hash where the following keys are defined:
@@ -390,9 +398,13 @@ a reference to a hash where the following keys are defined:
 workspace_name has a value which is a kb_gblocks.workspace_name
 desc has a value which is a string
 input_name has a value which is a kb_gblocks.data_obj_name
-input_mask_name has a value which is a kb_gblocks.data_obj_name
 output_name has a value which is a kb_gblocks.data_obj_name
 trim_level has a value which is an int
+min_seqs_for_conserved has a value which is an int
+min_seqs_for_flank has a value which is an int
+max_pos_contig_nonconserved has a value which is an int
+min_block_len has a value which is an int
+remove_mask_positions_flag has a value which is an int
 
 </pre>
 
@@ -404,9 +416,13 @@ a reference to a hash where the following keys are defined:
 workspace_name has a value which is a kb_gblocks.workspace_name
 desc has a value which is a string
 input_name has a value which is a kb_gblocks.data_obj_name
-input_mask_name has a value which is a kb_gblocks.data_obj_name
 output_name has a value which is a kb_gblocks.data_obj_name
 trim_level has a value which is an int
+min_seqs_for_conserved has a value which is an int
+min_seqs_for_flank has a value which is an int
+max_pos_contig_nonconserved has a value which is an int
+min_block_len has a value which is an int
+remove_mask_positions_flag has a value which is an int
 
 
 =end text
