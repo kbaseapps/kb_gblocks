@@ -55,7 +55,7 @@
             "text_options": {
 		"validate_as": "int",
 		"min_integer": "0",
-		"max_integer": "2",
+		"max_integer": "2"
             }
         },
         {
