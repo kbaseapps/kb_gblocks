@@ -69,7 +69,7 @@ parameters :
             Min Block Len
         short-hint : |
             Minimum number of positions (columns) required to include a block in the output MSA; 10=default
-    remove_masked_positions_flag:
+    remove_mask_positions_flag:
         ui-name : |
             Remove Masked Pos?
         short-hint : |

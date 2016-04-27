@@ -155,8 +155,8 @@
                     "target_property": "min_seqs_for_flank"
                 },
                 {
-                    "input_parameter": "max_seqs_for_flank",
-                    "target_property": "max_seqs_for_flank"
+                    "input_parameter": "max_pos_contig_nonconserved",
+                    "target_property": "max_pos_contig_nonconserved"
                 },
                 {
                     "input_parameter": "min_block_len",
