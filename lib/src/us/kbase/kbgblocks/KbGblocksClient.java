@@ -1,14 +1,24 @@
 package us.kbase.kbgblocks;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import us.kbase.auth.AuthToken;
 import us.kbase.common.service.JsonClientCaller;
+import us.kbase.common.service.JsonClientException;
+import us.kbase.common.service.RpcContext;
+import us.kbase.common.service.UnauthorizedException;
 
 /**
  * <p>Original spec-file module name: kb_gblocks</p>
  * <pre>
- * A KBase module: kb_gblocks
+ * ** A KBase module: gblocks
+ * **
+ * ** This module runs Gblocks trim Multiple Sequence Alignments (MSAs) to remove hypervariable (gappy) regions using Gblocks
+ * **
  * </pre>
  */
 public class KbGblocksClient {
@@ -20,6 +30,35 @@ public class KbGblocksClient {
      */
     public KbGblocksClient(URL url) {
         caller = new JsonClientCaller(url);
+    }
+    /** Constructs a client with a custom URL.
+     * @param url the URL of the service.
+     * @param token the user's authorization token.
+     * @throws UnauthorizedException if the token is not valid.
+     * @throws IOException if an IOException occurs when checking the token's
+     * validity.
+     */
+    public KbGblocksClient(URL url, AuthToken token) throws UnauthorizedException, IOException {
+        caller = new JsonClientCaller(url, token);
+    }
+
+    /** Constructs a client with a custom URL.
+     * @param url the URL of the service.
+     * @param user the user name.
+     * @param password the password for the user name.
+     * @throws UnauthorizedException if the credentials are not valid.
+     * @throws IOException if an IOException occurs when checking the user's
+     * credentials.
+     */
+    public KbGblocksClient(URL url, String user, String password) throws UnauthorizedException, IOException {
+        caller = new JsonClientCaller(url, user, password);
+    }
+
+    /** Get the token this client uses to communicate with the server.
+     * @return the authorization token.
+     */
+    public AuthToken getToken() {
+        return caller.getToken();
     }
 
     /** Get the URL of the service with which this client communicates.
@@ -100,5 +139,26 @@ public class KbGblocksClient {
 
     public void _setFileForNextRpcResponse(File f) {
         caller.setFileForNextRpcResponse(f);
+    }
+
+    /**
+     * <p>Original spec-file function name: run_Gblocks</p>
+     * <pre>
+     * Method for trimming MSAs of either DNA or PROTEIN sequences
+     * **
+     * **        input_type: MSA
+     * **        output_type: MSA
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbgblocks.GblocksParams GblocksParams} (original type "Gblocks_Params")
+     * @return   instance of type {@link us.kbase.kbgblocks.GblocksOutput GblocksOutput} (original type "Gblocks_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public GblocksOutput runGblocks(GblocksParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<GblocksOutput>> retType = new TypeReference<List<GblocksOutput>>() {};
+        List<GblocksOutput> res = caller.jsonrpcCall("kb_gblocks.run_Gblocks", args, retType, true, true, jsonRpcContext);
+        return res.get(0);
     }
 }
