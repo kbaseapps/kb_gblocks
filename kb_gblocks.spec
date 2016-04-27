@@ -27,9 +27,13 @@ module kb_gblocks {
         workspace_name workspace_name;
 	string         desc;
 	data_obj_name  input_name;
-	data_obj_name  input_mask_name;
         data_obj_name  output_name;
-	int            trim_level;
+	int            trim_level;                   /* 0=no gaps allowed, 1=half gaps allowed, 2=all gaps allowed */
+	int            min_seqs_for_conserved;       /* 0=use MSA-depth-derived default */
+	int            min_seqs_for_flank;           /* 0=use MSA-depth-derived default */
+	int            max_pos_contig_nonconserved;  /* 8=default */
+	int            min_block_len;                /* 10=default */
+	int            remove_mask_positions_flag;   /* 0=false,1=true default=0 */
     } Gblocks_Params;
 
 

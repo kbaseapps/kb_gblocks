@@ -50,7 +50,7 @@ class kb_gblocks:
     shockURL = None
     handleURL = None
 
-    FASTTREE_bin = '/kb/module/FastTree/bin/FastTree'
+    GBLOCKS_bin = '/kb/module/Gblocks'
 
     # target is a list for collecting log messages
     def log(self, target, message):
@@ -228,10 +228,10 @@ class kb_gblocks:
         #BEGIN run_Gblocks
         console = []
         invalid_msgs = []
-        self.log(console,'Running run_FastTree with params=')
+        self.log(console,'Running run_Gblocks with params=')
         self.log(console, "\n"+pformat(params))
         report = ''
-#        report = 'Running run_FastTree with params='
+#        report = 'Running run_Gblocks with params='
 #        report += "\n"+pformat(params)
 
 
@@ -355,8 +355,8 @@ class kb_gblocks:
             provenance[0]['input_ws_objects'].append(params['workspace_name']+'/'+params['input_name'])
             if 'intree' in params and params['intree'] != None:
                 provenance[0]['input_ws_objects'].append(params['workspace_name']+'/'+params['intree'])
-            provenance[0]['service'] = 'kb_fasttree'
-            provenance[0]['method'] = 'run_FastTree'
+            provenance[0]['service'] = 'kb_gblocks'
+            provenance[0]['method'] = 'run_Gblocks'
 
             # report
             report += "FAILURE\n\n"+"\n".join(invalid_msgs)+"\n"
@@ -365,7 +365,7 @@ class kb_gblocks:
                 'text_message':report
                 }
 
-            reportName = 'fasttree_report_'+str(hex(uuid.getnode()))
+            reportName = 'gblocks_report_'+str(hex(uuid.getnode()))
             report_obj_info = ws.save_objects({
 #                'id':info[6],
                 'workspace':params['workspace_name'],
@@ -387,20 +387,21 @@ class kb_gblocks:
                           'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]),
                           'output_ref': None
                           }
-            self.log(console,"run_FastTree DONE")
+            self.log(console,"run_Gblocks DONE")
             return [returnVal]
 
 
         ### Construct the command
         #
-        #  e.g. fasttree -in <fasta_in> -out <fasta_out> -maxiters <n> -haxours <h>
+        #  e.g.
+        #  for "0.5" gaps: cat "o\n<MSA_file>\nb\n5\ng\nm\nq\n" | Gblocks
+        #  for "all" gaps: cat "o\n<MSA_file>\nb\n5\n5\ng\nm\nq\n" | Gblocks
         #
-        fasttree_cmd = [self.FASTTREE_bin]
-#        fasttree_cmd = []  # DEBUG
+        gblocks_cmd = [self.GBLOCKS_bin]
 
         # check for necessary files
-        if not os.path.isfile(self.FASTTREE_bin):
-            raise ValueError("no such file '"+self.FASTTREE_bin+"'")
+        if not os.path.isfile(self.GBLOCKS_bin):
+            raise ValueError("no such file '"+self.GBLOCKS_bin+"'")
         if not os.path.isfile(input_MSA_file_path):
             raise ValueError("no such file '"+input_MSA_file_path+"'")
         if not os.path.getsize(input_MSA_file_path) > 0:
@@ -418,88 +419,47 @@ class kb_gblocks:
         output_dir = os.path.join(self.scratch,'output.'+str(timestamp))
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-        output_newick_file_path = os.path.join(output_dir, params['output_name']+'.newick');
 
-        # This doesn't work for some reason
-#        fasttree_cmd.append('-out')
-#        fasttree_cmd.append(output_newick_file_path)
+        # Gblocks names output blocks MSA by appending "-gb" to input file
+        output_MSA_file_path = os.path.join(output_dir, params['input_name']+'-gb');
 
-
-        # options
-        #fasttree_cmd.append('-quiet')
-        fasttree_cmd.append('-nopr')
-        if 'fastest' in params and params['fastest'] != None and params['fastest'] != 0:
-            fasttree_cmd.append('-fastest')
-        if 'pseudo' in params and params['pseudo'] != None and params['pseudo'] != 0:
-            fasttree_cmd.append('-pseudo')
-        if 'intree' in params and params['intree'] != None:
-            fasttree_cmd.append('-intree')
-            fasttree_cmd.append(intree_newick_file_path)
-        if all_seqs_nuc and 'gtr' in params and params['gtr'] != None and params['gtr'] != 0:
-            fasttree_cmd.append('-gtr')
-        if not all_seqs_nuc and 'wag' in params and params['wag'] != None and params['wag'] != 0:
-            fasttree_cmd.append('-wag')
-        if 'noml' in params and params['noml'] != None and params['noml'] != 0:
-            fasttree_cmd.append('-noml')
-        if 'nome' in params and params['nome'] != None and params['nome'] != 0:
-            fasttree_cmd.append('-nome')
-        if 'nocat' in params and params['nocat'] != None and params['nocat'] != 0:
-            fasttree_cmd.append('-nocat')
-        elif not all_seqs_nuc and 'cat' in params and params['cat'] != None and params['cat'] > 0:
-        # DEBUG
-#        elif 'cat' in params and params['cat'] != None and params['cat'] > 0:
-            fasttree_cmd.append('-cat')
-            fasttree_cmd.append(str(params['cat']))
-        if 'gamma' in params and params['gamma'] != None and params['gamma'] != 0:
-            fasttree_cmd.append('-gamma')
-
-        if all_seqs_nuc:
-            fasttree_cmd.append('-nt')
-
-        # better (meaning it works) to write MSA to STDIN (below)
-#        fasttree_cmd.append('<')
-#        fasttree_cmd.append(input_MSA_file_path)
-        fasttree_cmd.append('>')
-        fasttree_cmd.append(output_newick_file_path)
+        # Gblocks is interactive and only accepts args from pipe input
+        #if 'arg' in params and params['arg'] != None and params['arg'] != 0:
+        #    fasttree_cmd.append('-arg')
+        #    fasttree_cmd.append(val)
 
 
-        # Run FASTTREE, capture output as it happens
+        # Run GBLOCKS, capture output as it happens
         #
-        self.log(console, 'RUNNING FASTTREE:')
-        self.log(console, '    '+' '.join(fasttree_cmd))
-#        self.log(console, '    '+self.FASTTREE_bin+' '+' '.join(fasttree_cmd))
-#        report += "\n"+'running FASTTREE:'+"\n"
-#        report += '    '+' '.join(fasttree_cmd)+"\n"
+        self.log(console, 'RUNNING GBLOCKS:')
+        self.log(console, '    '+' '.join(gblocks_cmd))
+#        report += "\n"+'running GBLOCKS:'+"\n"
+#        report += '    '+' '.join(gblocks_cmd)+"\n"
 
         # FastTree requires shell=True in order to see input data
         env = os.environ.copy()
-#        p = subprocess.Popen(fasttree_cmd, \
-        joined_fasttree_cmd = ' '.join(fasttree_cmd)  # redirect out doesn't work with subprocess unless you join command first
-        p = subprocess.Popen([joined_fasttree_cmd], \
+        p = subprocess.Popen(fasttree_cmd, \
+        #joined_fasttree_cmd = ' '.join(fasttree_cmd)  # redirect out doesn't work with subprocess unless you join command first
+        p = subprocess.Popen(gblocks_cmd, \
                              cwd = self.scratch, \
                              stdin = subprocess.PIPE, \
                              stdout = subprocess.PIPE, \
                              stderr = subprocess.PIPE, \
                              shell = True, \
                              env = env)
-#                             stdout = subprocess.PIPE, \
 #                             executable = '/bin/bash' )
 
-#        p = subprocess.Popen(fasttree_cmd, \
-#                             cwd = self.scratch, \
-#                             stdout = subprocess.PIPE, \
-#                             stderr = subprocess.STDOUT, \
-#                             shell = True, \
-#                             env = env, \
-#                             executable = self.FASTTREE_bin )
-
-#                             shell = True, \  # seems necessary?
-#                            stdout = subprocess.PIPE, \
-#                             stdout = output_newick_file_path, \
-
         
-        # write MSA to process for FastTree
+        # write commands to process
         #
+        #  for "0.5" gaps: cat "o\n<MSA_file>\nb\n5\ng\nm\nq\n" | Gblocks
+        #  for "all" gaps: cat "o\n<MSA_file>\nb\n5\n5\ng\nm\nq\n" | Gblocks
+        p.stdin.write("o\n")
+        p.stdin.write(input_MSA_file_path+"\n")
+        if 'arg' in params and params['arg'] != None and params['arg'] != 0:
+             p.stdin.write("b\n")
+        
+
         with open(input_MSA_file_path,'r',0) as input_MSA_file_handle:
             for line in input_MSA_file_handle:
                 p.stdin.write(line)
@@ -520,15 +480,15 @@ class kb_gblocks:
         p.wait()
         self.log(console, 'return code: ' + str(p.returncode))
         if p.returncode != 0:
-            raise ValueError('Error running FASTTREE, return code: '+str(p.returncode) + 
+            raise ValueError('Error running GBLOCKS, return code: '+str(p.returncode) + 
                 '\n\n'+ '\n'.join(console))
 
         # Check that FASTREE produced output
         #
         if not os.path.isfile(output_newick_file_path):
-            raise ValueError("failed to create FASTTREE output: "+output_newick_file_path)
+            raise ValueError("failed to create GBLOCKS output: "+output_newick_file_path)
         elif not os.path.getsize(output_newick_file_path) > 0:
-            raise ValueError("created empty file for FASTTREE output: "+output_newick_file_path)
+            raise ValueError("created empty file for GBLOCKS output: "+output_newick_file_path)
 
 
         # load the method provenance from the context object
@@ -542,8 +502,8 @@ class kb_gblocks:
         provenance[0]['input_ws_objects'].append(params['workspace_name']+'/'+params['input_name'])
         if 'intree' in params and params['intree'] != None:
             provenance[0]['input_ws_objects'].append(params['workspace_name']+'/'+params['intree'])
-        provenance[0]['service'] = 'kb_fasttree'
-        provenance[0]['method'] = 'run_FastTree'
+        provenance[0]['service'] = 'kb_gblocks'
+        provenance[0]['method'] = 'run_Gblocks'
 
 
         # Upload results
@@ -625,7 +585,7 @@ class kb_gblocks:
             #report += 'sequences in hit set:  '+str(hit_total)+"\n"
             report += output_newick_buf+"\n"
             reportObj = {
-                'objects_created':[{'ref':params['workspace_name']+'/'+params['output_name'], 'description':'FastTree Tree'}],
+                'objects_created':[{'ref':params['workspace_name']+'/'+params['output_name'], 'description':'Gblocks MSA'}],
                 'text_message':report
                 }
         else:
@@ -635,7 +595,7 @@ class kb_gblocks:
                 'text_message':report
                 }
 
-        reportName = 'fasttree_report_'+str(hex(uuid.getnode()))
+        reportName = 'gblocks_report_'+str(hex(uuid.getnode()))
         report_obj_info = ws.save_objects({
 #                'id':info[6],
                 'workspace':params['workspace_name'],
@@ -657,7 +617,7 @@ class kb_gblocks:
                       'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]),
                       'output_ref': str(new_obj_info[6]) + '/' + str(new_obj_info[0]) + '/' + str(new_obj_info[4])
                       }
-        self.log(console,"run_FastTree DONE")
+        self.log(console,"run_Gblocks DONE")
         #END run_Gblocks
 
         # At some point might do deeper type checking...
