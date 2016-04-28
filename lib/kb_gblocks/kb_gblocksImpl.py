@@ -324,10 +324,11 @@ class kb_gblocks:
             for line in input_MSA_file_handle:
                 if line.startswith('>'):
                     N_seqs += 1
-                    if L_first_seq == 0:
-                        for c in line:
-                            if c != '-' and c != "\n":
-                                L_first_seq += 1
+                    continue
+                if L_first_seq == 0:
+                    for c in line:
+                        if c != '-' and c != ' ' and c != "\n":
+                            L_first_seq += 1
         # min_seqs_for_conserved
         if params['min_seqs_for_conserved'] < int(0.5*N_seqs)+1:
             self.log(invalid_msgs,"Min Seqs for Conserved Pos ("+str(params['min_seqs_for_conserved'])+") must be >= N/2+1 (N="+str(N_seqs)+", N/2+1="+str(int(0.5*N_seqs)+1)+")\n")
