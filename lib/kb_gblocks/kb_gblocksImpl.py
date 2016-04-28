@@ -543,7 +543,7 @@ class kb_gblocks:
         #
         if not os.path.isfile(output_GBLOCKS_file_path):
             raise ValueError("failed to create GBLOCKS output: "+output_GBLOCKS_file_path)
-        elif not os.path.getsize(output_GLOCKS_file_path) > 0:
+        elif not os.path.getsize(output_GBLOCKS_file_path) > 0:
             raise ValueError("created empty file for GBLOCKS output: "+output_GBLOCKS_file_path)
 
 
