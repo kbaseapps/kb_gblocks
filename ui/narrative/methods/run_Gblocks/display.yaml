@@ -41,9 +41,9 @@ parameters :
             Multiple Sequence Alignment to trim.  Data type is MSA.
     output_name:
         ui-name : |
-            Output Tree
+            Output BLOCKS MSA
         short-hint : |
-            Phylogenetic Tree output.  Data type is Tree.
+            Multiple Sequence Alignment of BLOCKS output.  Data type is MSA.
     trim_level:
         ui-name : |
             Trim Level
@@ -53,22 +53,22 @@ parameters :
         ui-name : |
             Min Seqs for Conserved Pos
         short-hint : |
-            Minimum number of sequences required with a conserved residue before a position (column) is considered a "Conserved Position"; 0=Use MSA-derived default (e.g. for 14 seqs, default is 8).  Value must be >= than N/2+1 and <= Min Seqs For Flank Pos.
+            Minimum number of sequences required with a conserved residue before a position (column) is considered a "Conserved Position"; 0=Use MSA-derived default (e.g. for 14 seqs, default is 8).  Value must be >= than N/2+1 and <= Min Seqs For Flank Pos, where N=number of sequences.
     min_seqs_for_flank:
         ui-name : |
             Min Seqs for Flank Pos
         short-hint : |
-            Minimum number of sequences required with a residue in a position (column) flanking a conserved position before being considered a "Flank Position"; 0=Use MSA-derived default (e.g. for 14 seqs, default is 11).  Value must be >= Min Seqs for Conserved Pos and <= N.
+            Minimum number of sequences required with a residue in a position (column) flanking a conserved position before being considered a "Flank Position"; 0=Use MSA-derived default (e.g. for 14 seqs, default is 11).  Value must be >= Min Seqs for Conserved Pos and <= N, where N=number of sequences.
     max_pos_contig_nonconserved:
         ui-name : |
             Max Num Non-Conserved Pos
         short-hint : |
-            Maximum number of non-conserved positions (columns) that may be included in a block; 8=default.  Value must be >= 0 and < 32000.
+            Maximum number of non-conserved positions (columns) that may be included in a block; 8=default.  Value must be >= 0 and <= number of aligned positions (32000 upper bound).
     min_block_len:
         ui-name : |
             Min Block Len
         short-hint : |
-            Minimum number of positions (columns) required to include a block in the output MSA; 10=default.  Value must be >= 2 and < 32000.
+            Minimum number of positions (columns) required to include a block in the output MSA; 10=default.  Value must be >= 2 and <= number of aligned positions (32000 upper bound).
     remove_mask_positions_flag:
         ui-name : |
             Remove Masked Pos?
