@@ -352,7 +352,7 @@ class kb_gblocks:
         if 'min_block_len' in params and params['min_block_len'] != None and int(params['min_block_len']) != 0:
             if int(params['min_block_len']) < 2:
                 self.log(invalid_msgs,"Min Block Len ("+str(params['min_block_len'])+") must be >= 2"+"\n")
-            if int(params['min_block_len']) > L_first_seq or params['min_block_len'] >= 32000:
+            if int(params['min_block_len']) > L_first_seq or int(params['min_block_len']) >= 32000:
                 self.log(invalid_msgs,"Min Block Len ("+str(params['min_block_len'])+") must be <= L first seq ("+str(L_first_seq)+") and < 32000\n")
 
         # trim_level
