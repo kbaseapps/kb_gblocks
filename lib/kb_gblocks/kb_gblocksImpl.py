@@ -533,7 +533,8 @@ class kb_gblocks:
         #p.stderr.close()
         p.wait()
         self.log(console, 'return code: ' + str(p.returncode))
-        if p.returncode != 0:
+#        if p.returncode != 0:
+        if p.returncode != 1:
             raise ValueError('Error running GBLOCKS, return code: '+str(p.returncode) + 
                 '\n\n'+ '\n'.join(console))
 
