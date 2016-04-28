@@ -664,7 +664,7 @@ class kb_gblocks:
         if len(invalid_msgs) == 0:
             report += "NEW GBLOCKS MSA:\n\n"
             for row_id in row_order:
-                report += "\t".join(row_id, MSA_out['alignment'][row_id])+"\n"
+                report += "\t".join([row_id, MSA_out['alignment'][row_id]])+"\n"
             reportObj = {
                 'objects_created':[{'ref':params['workspace_name']+'/'+params['output_name'], 'description':'Gblocks MSA'}],
                 'text_message':report
