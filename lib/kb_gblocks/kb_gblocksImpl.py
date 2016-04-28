@@ -433,7 +433,7 @@ class kb_gblocks:
             os.makedirs(output_dir)
 
         # Gblocks names output blocks MSA by appending "-gb" to input file
-        output_MSA_file_path = os.path.join(output_dir, params['input_name']+'-gb');
+        output_GBLOCKS_file_path = os.path.join(output_dir, params['input_name']+'-gb');
 
         # Gblocks is interactive and only accepts args from pipe input
         #if 'arg' in params and params['arg'] != None and params['arg'] != 0:
@@ -476,6 +476,8 @@ class kb_gblocks:
                   p.stdin.write("5"+"\n")  # set to "half"
                   if params['trim_level'] == 2:
                        p.stdin.write("5"+"\n")  # set to "all"
+                  else:
+                       raise ValueError ("trim_level ("+str(params['trim_level'])+") was not between 0-2")
              p.stdin.write("m"+"\n")
 
         # flank must precede conserved because it acts us upper bound for acceptable conserved values
@@ -527,15 +529,11 @@ class kb_gblocks:
 
         # Check that GBLOCKS produced output
         #
-        if not os.path.isfile(output_MSA_file_path):
-            raise ValueError("failed to create GBLOCKS output: "+output_MSA_file_path)
-        elif not os.path.getsize(output_MSA_file_path) > 0:
-            raise ValueError("created empty file for GBLOCKS output: "+output_MSA_file_path)
+        if not os.path.isfile(output_GBLOCKS_file_path):
+            raise ValueError("failed to create GBLOCKS output: "+output_GBLOCKS_file_path)
+        elif not os.path.getsize(output_GLOCKS_file_path) > 0:
+            raise ValueError("created empty file for GBLOCKS output: "+output_GBLOCKS_file_path)
 
-
-        # reformat output to MSA and check that output not empty (often happens when param combinations don't produce viable blocks
-        #
-# HERE
 
         # load the method provenance from the context object
         #
@@ -550,67 +548,95 @@ class kb_gblocks:
         provenance[0]['method'] = 'run_Gblocks'
 
 
+        # reformat output to single-line FASTA MSA and check that output not empty (often happens when param combinations don't produce viable blocks
+        #
+        id_order = []
+        this_id = None
+        ids = dict()
+        alignment = dict()
+        L_alignment = 0;
+        L_alignment_set = False
+        with open(output_GBLOCKS_file_path,'r',0) as output_GBLOCKS_file_handle:
+            for line in output_GBLOCKS_file_handle:
+                line = line.rstrip()
+                if line.startswith('>'):
+                    this_id = line[1:]
+                    id_order.append(this_id)
+                    alignment[this_id] = ''
+                    if L_alignment != 0 and not L_alignment_set:
+                         L_alignment_set = True
+                    continue
+                for c in line:
+                    if c != ' ' and c != "\n":
+                        alignment[this_id] += c
+                        if not L_alignment_set:
+                            L_alignment += 1
+        if L_alignment == 0:
+            self.log(invalid_msgs,"params produced no blocks.  Consider changing to less stringent values")
+        else:
+            if 'remove_mask_positions_flag' in params and params['remove_mask_positions_flag'] != None and params['remove_mask_positions_flag'] != 0:
+                mask = []
+                new_alignment = dict()
+                for i in range(0,L_alignment):
+                    mask[i] = '+'
+                    if alignment[id_order[0]][i] == '-' \
+                        or alignment[id_order[0]][i] == 'X' \
+                        or alignment[id_order[0]][i] == 'x':
+                        mask[i] = '-'
+                for row_id in id_order:
+                    new_alignment[row_id] = ''
+                    for i,c in enumerate(alignment[row_id]):
+                         if mask[i] == '+':
+                            new_alignment[row_id] += c
+                alignment = new_alignment
+
+            L_alignment = len(alignment[id_order[0]] 
+
+#            # actually, don't have to write to file at all
+#            records = []
+#            for row_id in id_order:
+#                records.extend(['>'+row_id,
+#                                alignment[row_id]
+#                               ])
+#
+#            output_MSA_file_path = os.path.join(output_dir, params['output_name']+'.fasta');
+#            with open(output_MSA_file_path,'w',0) as output_MSA_file_handle:
+#                input_MSA_file_handle.write("\n".join(records)+"\n")
+
+
         # Upload results
         #
         if len(invalid_msgs) == 0:
             self.log(console,"UPLOADING RESULTS")  # DEBUG
 
-            tree_name = params['output_name']
-            tree_description = params['desc']
-            tree_type = 'GeneTree'
-            if 'species_tree_flag' in params and params['species_tree_flag'] != None and params['species_tree_flag'] != 0:
-                tree_type = 'SpeciesTree'
-
-            with open(output_newick_file_path,'r',0) as output_newick_file_handle:
-                output_newick_buf = output_newick_file_handle.read()
-            output_newick_buf = output_newick_buf.rstrip()
-            self.log(console,"\nNEWICK:\n"+output_newick_buf+"\n")
+# Didn't write file
+#            with open(output_MSA_file_path,'r',0) as output_MSA_file_handle:
+#                output_MSA_buf = output_MSA_file_handle.read()
+#            output_MSA_buf = output_MSA_buf.rstrip()
+#            self.log(console,"\nMSA:\n"+output_MSA_buf+"\n")
         
-            # Extract info from MSA
+            # Build output_MSA structure
+            #   first extract old info from MSA (labels, ws_refs, etc.)
             #
-            tree_attributes = None
-            default_node_labels = None
-            ws_refs = None
-            kb_refs = None
-            leaf_list = None
-            if default_row_labels != None:
-                default_node_labels = dict()
-                leaf_list = []
-                for row_id in default_row_labels.keys():
-                    default_node_labels[row_id] = default_row_labels[row_id]
-                    leaf_list.append(row_id)
+            MSA_out = dict()
+            for key in MSA_in.keys():
+                 MSA_out[key] = MSA_in[key]
 
-            if 'ws_refs' in MSA_in.keys() and MSA_in['ws_refs'] != None:
-                ws_refs = MSA_in['ws_refs']
-            if 'kb_refs' in MSA_in.keys() and MSA_in['kb_refs'] != None:
-                kb_refs = MSA_in['kb_refs']
-
-            # Build output_Tree structure
+            # then replace with new info
             #
-            output_Tree = {
-                      'name': tree_name,
-                      'description': tree_description,
-                      'type': tree_type,
-                      'tree': output_newick_buf
-                     }
-            if tree_attributes != None:
-                output_Tree['tree_attributes'] = tree_attributes
-            if default_node_labels != None:
-                output_Tree['default_node_labels'] = default_node_labels
-            if ws_refs != None:
-                output_Tree['ws_refs'] = ws_refs 
-            if kb_refs != None:
-                output_Tree['kb_refs'] = kb_refs
-            if leaf_list != None:
-                output_Tree['leaf_list'] = leaf_list 
+            MSA_out['alignment'] = alignment
+            MSA_out['name'] = params['output_name']
+            MSA_out['alignment_length'] = L_alignment
+            if 'desc' in params and params['desc'] != None and params['desc'] != '':
+                MSA_out['desc'] = params['desc']
 
-            # Store output_Tree
+            # Store MSA_out
             #
             new_obj_info = ws.save_objects({
                             'workspace': params['workspace_name'],
                             'objects':[{
-                                    'type': 'KBaseTrees.Tree',
-                                    'data': output_Tree,
+                                    'type': 'KBaseTrees.MSA',
+                                    'data': MSA_out,
                                     'name': params['output_name'],
                                     'meta': {},
                                     'provenance': provenance
@@ -623,11 +649,9 @@ class kb_gblocks:
         self.log(console,"BUILDING REPORT")  # DEBUG
 
         if len(invalid_msgs) == 0:
-            #self.log(console,"sequences in many set: "+str(seq_total))
-            #self.log(console,"sequences in hit set:  "+str(hit_total))
-            #report += 'sequences in many set: '+str(seq_total)+"\n"
-            #report += 'sequences in hit set:  '+str(hit_total)+"\n"
-            report += output_newick_buf+"\n"
+            report += "NEW GBLOCKS MSA:\n\n"
+            for row_id in row_order:
+                report += "\t".join(row_id, MSA_out['alignment'][row_id])+"\n"
             reportObj = {
                 'objects_created':[{'ref':params['workspace_name']+'/'+params['output_name'], 'description':'Gblocks MSA'}],
                 'text_message':report
@@ -659,7 +683,7 @@ class kb_gblocks:
         self.log(console,"BUILDING RETURN OBJECT")
         returnVal = { 'report_name': reportName,
                       'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]),
-                      'output_ref': str(new_obj_info[6]) + '/' + str(new_obj_info[0]) + '/' + str(new_obj_info[4])
+#                      'output_ref': str(new_obj_info[6]) + '/' + str(new_obj_info[0]) + '/' + str(new_obj_info[4])
                       }
         self.log(console,"run_Gblocks DONE")
         #END run_Gblocks
