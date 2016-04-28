@@ -335,7 +335,7 @@ class kb_gblocks:
             self.log(invalid_msgs,"Min Seqs for Conserved Pos ("+str(params['min_seqs_for_conserved'])+") must be <= Min Seqs for Flank Pos ("+str(params['min_seqs_for_flank'])+")\n")
 
         # min_seqs_for_flank
-        if params['min_seqs_for_flank'] > N_seq:
+        if params['min_seqs_for_flank'] > N_seqs:
             self.log(invalid_msgs,"Min Seqs for Flank Pos ("+str(params['min_seqs_for_flank'])+") must be <= N (N="+str(N_seqs)+")\n")
 
         # max_pos_contig_nonconserved
