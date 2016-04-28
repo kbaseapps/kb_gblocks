@@ -590,7 +590,7 @@ class kb_gblocks:
                             new_alignment[row_id] += c
                 alignment = new_alignment
 
-            L_alignment = len(alignment[id_order[0]] 
+            L_alignment = len(alignment[id_order[0]])
 
 #            # actually, don't have to write to file at all
 #            records = []
