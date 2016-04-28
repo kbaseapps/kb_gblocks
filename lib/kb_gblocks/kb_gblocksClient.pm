@@ -141,7 +141,6 @@ data_obj_name is a string
 Gblocks_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a kb_gblocks.data_obj_name
 	report_ref has a value which is a kb_gblocks.data_obj_ref
-	output_ref has a value which is a kb_gblocks.data_obj_ref
 data_obj_ref is a string
 
 </pre>
@@ -168,7 +167,6 @@ data_obj_name is a string
 Gblocks_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a kb_gblocks.data_obj_name
 	report_ref has a value which is a kb_gblocks.data_obj_ref
-	output_ref has a value which is a kb_gblocks.data_obj_ref
 data_obj_ref is a string
 
 
@@ -450,7 +448,6 @@ Gblocks Output
 a reference to a hash where the following keys are defined:
 report_name has a value which is a kb_gblocks.data_obj_name
 report_ref has a value which is a kb_gblocks.data_obj_ref
-output_ref has a value which is a kb_gblocks.data_obj_ref
 
 </pre>
 
@@ -461,7 +458,6 @@ output_ref has a value which is a kb_gblocks.data_obj_ref
 a reference to a hash where the following keys are defined:
 report_name has a value which is a kb_gblocks.data_obj_name
 report_ref has a value which is a kb_gblocks.data_obj_ref
-output_ref has a value which is a kb_gblocks.data_obj_ref
 
 
 =end text
