@@ -482,7 +482,7 @@ class kb_gblocks:
                 if int(params['trim_level']) == 2:
                     self.log (console,"changing trim level")
                     p.stdin.write("5"+"\n")  # set to "all"
-                else:
+                elif int(params['trim_level']) > 2:
                     raise ValueError ("trim_level ("+str(params['trim_level'])+") was not between 0-2")
                 p.stdin.write("m"+"\n")
 
