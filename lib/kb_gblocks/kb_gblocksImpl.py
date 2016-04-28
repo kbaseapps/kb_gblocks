@@ -330,30 +330,35 @@ class kb_gblocks:
                         if c != '-' and c != ' ' and c != "\n":
                             L_first_seq += 1
         # min_seqs_for_conserved
-        if int(params['min_seqs_for_conserved']) < int(0.5*N_seqs)+1:
-            self.log(invalid_msgs,"Min Seqs for Conserved Pos ("+str(params['min_seqs_for_conserved'])+") must be >= N/2+1 (N="+str(N_seqs)+", N/2+1="+str(int(0.5*N_seqs)+1)+")\n")
-        if int(params['min_seqs_for_conserved']) > int(params['min_seqs_for_flank']):
-            self.log(invalid_msgs,"Min Seqs for Conserved Pos ("+str(params['min_seqs_for_conserved'])+") must be <= Min Seqs for Flank Pos ("+str(params['min_seqs_for_flank'])+")\n")
+        if 'min_seqs_for_conserved' in params and params['min_seqs_for_conserved'] != None and int(params['min_seqs_for_conserved']) != 0:
+            if int(params['min_seqs_for_conserved']) < int(0.5*N_seqs)+1:
+                self.log(invalid_msgs,"Min Seqs for Conserved Pos ("+str(params['min_seqs_for_conserved'])+") must be >= N/2+1 (N="+str(N_seqs)+", N/2+1="+str(int(0.5*N_seqs)+1)+")\n")
+            if int(params['min_seqs_for_conserved']) > int(params['min_seqs_for_flank']):
+                self.log(invalid_msgs,"Min Seqs for Conserved Pos ("+str(params['min_seqs_for_conserved'])+") must be <= Min Seqs for Flank Pos ("+str(params['min_seqs_for_flank'])+")\n")
 
         # min_seqs_for_flank
-        if int(params['min_seqs_for_flank']) > N_seqs:
-            self.log(invalid_msgs,"Min Seqs for Flank Pos ("+str(params['min_seqs_for_flank'])+") must be <= N (N="+str(N_seqs)+")\n")
+        if 'min_seqs_for_flank' in params and params['min_seqs_for_flank'] != None and int(params['min_seqs_for_flank']) != 0:
+            if int(params['min_seqs_for_flank']) > N_seqs:
+                self.log(invalid_msgs,"Min Seqs for Flank Pos ("+str(params['min_seqs_for_flank'])+") must be <= N (N="+str(N_seqs)+")\n")
 
         # max_pos_contig_nonconserved
-        if int(params['max_pos_contig_nonconserved']) < 0:
-            self.log(invalid_msgs,"Max Num Non-Conserved Pos ("+str(params['max_pos_contig_nonconserved'])+") must be >= 0"+"\n")
-        if int(params['max_pos_contig_nonconserved']) > L_first_seq or int(params['max_pos_contig_nonconserved']) >= 32000:
-            self.log(invalid_msgs,"Max Num Non-Conserved Pos ("+str(params['max_pos_contig_nonconserved'])+") must be <= L first seq ("+str(L_first_seq)+") and < 32000\n")
+        if 'max_pos_contig_nonconserved' in params and params['max_pos_contig_nonconserved'] != None and int(params['max_pos_contig_nonconserved']) != 0:
+            if int(params['max_pos_contig_nonconserved']) < 0:
+                self.log(invalid_msgs,"Max Num Non-Conserved Pos ("+str(params['max_pos_contig_nonconserved'])+") must be >= 0"+"\n")
+            if int(params['max_pos_contig_nonconserved']) > L_first_seq or int(params['max_pos_contig_nonconserved']) >= 32000:
+                self.log(invalid_msgs,"Max Num Non-Conserved Pos ("+str(params['max_pos_contig_nonconserved'])+") must be <= L first seq ("+str(L_first_seq)+") and < 32000\n")
 
         # min_block_len
-        if int(params['min_block_len']) < 2:
-            self.log(invalid_msgs,"Min Block Len ("+str(params['min_block_len'])+") must be >= 2"+"\n")
-        if int(params['min_block_len']) > L_first_seq or params['max_block_len'] >= 32000:
-            self.log(invalid_msgs,"Min Block Len ("+str(params['min_block_len'])+") must be <= L first seq ("+str(L_first_seq)+") and < 32000\n")
+        if 'min_block_len' in params and params['min_block_len'] != None and int(params['min_block_len']) != 0:
+            if int(params['min_block_len']) < 2:
+                self.log(invalid_msgs,"Min Block Len ("+str(params['min_block_len'])+") must be >= 2"+"\n")
+            if int(params['min_block_len']) > L_first_seq or params['max_block_len'] >= 32000:
+                self.log(invalid_msgs,"Min Block Len ("+str(params['min_block_len'])+") must be <= L first seq ("+str(L_first_seq)+") and < 32000\n")
 
         # trim_level
-        if int(params['trim_level']) < 0 or int(params['trim_level']) > 2:
-            self.log(invalid_msgs,"Trim Level ("+str(params['trim_level'])+") must be >= 0 and <= 2"+"\n")
+        if 'trim_level' in params and params['trim_level'] != None and int(params['trim_level']) != 0:
+            if int(params['trim_level']) < 0 or int(params['trim_level']) > 2:
+                self.log(invalid_msgs,"Trim Level ("+str(params['trim_level'])+") must be >= 0 and <= 2"+"\n")
 
 
         if len(invalid_msgs) > 0:
