@@ -330,29 +330,29 @@ class kb_gblocks:
                         if c != '-' and c != ' ' and c != "\n":
                             L_first_seq += 1
         # min_seqs_for_conserved
-        if params['min_seqs_for_conserved'] < int(0.5*N_seqs)+1:
+        if int(params['min_seqs_for_conserved']) < int(0.5*N_seqs)+1:
             self.log(invalid_msgs,"Min Seqs for Conserved Pos ("+str(params['min_seqs_for_conserved'])+") must be >= N/2+1 (N="+str(N_seqs)+", N/2+1="+str(int(0.5*N_seqs)+1)+")\n")
-        if params['min_seqs_for_conserved'] > params['min_seqs_for_flank']:
+        if int(params['min_seqs_for_conserved']) > int(params['min_seqs_for_flank']):
             self.log(invalid_msgs,"Min Seqs for Conserved Pos ("+str(params['min_seqs_for_conserved'])+") must be <= Min Seqs for Flank Pos ("+str(params['min_seqs_for_flank'])+")\n")
 
         # min_seqs_for_flank
-        if params['min_seqs_for_flank'] > N_seqs:
+        if int(params['min_seqs_for_flank']) > N_seqs:
             self.log(invalid_msgs,"Min Seqs for Flank Pos ("+str(params['min_seqs_for_flank'])+") must be <= N (N="+str(N_seqs)+")\n")
 
         # max_pos_contig_nonconserved
-        if params['max_pos_contig_nonconserved'] < 0:
+        if int(params['max_pos_contig_nonconserved']) < 0:
             self.log(invalid_msgs,"Max Num Non-Conserved Pos ("+str(params['max_pos_contig_nonconserved'])+") must be >= 0"+"\n")
-        if params['max_pos_contig_nonconserved'] > L_first_seq or params['max_pos_contig_nonconserved'] >= 32000:
+        if int(params['max_pos_contig_nonconserved']) > L_first_seq or int(params['max_pos_contig_nonconserved']) >= 32000:
             self.log(invalid_msgs,"Max Num Non-Conserved Pos ("+str(params['max_pos_contig_nonconserved'])+") must be <= L first seq ("+str(L_first_seq)+") and < 32000\n")
 
         # min_block_len
-        if params['min_block_len'] < 2:
+        if int(params['min_block_len']) < 2:
             self.log(invalid_msgs,"Min Block Len ("+str(params['min_block_len'])+") must be >= 2"+"\n")
-        if params['min_block_len'] > L_first_seq or params['max_block_len'] >= 32000:
+        if int(params['min_block_len']) > L_first_seq or params['max_block_len'] >= 32000:
             self.log(invalid_msgs,"Min Block Len ("+str(params['min_block_len'])+") must be <= L first seq ("+str(L_first_seq)+") and < 32000\n")
 
         # trim_level
-        if params['trim_level'] < 0 or params['trim_level'] > 2:
+        if int(params['trim_level']) < 0 or int(params['trim_level']) > 2:
             self.log(invalid_msgs,"Trim Level ("+str(params['trim_level'])+") must be >= 0 and <= 2"+"\n")
 
 
@@ -366,8 +366,6 @@ class kb_gblocks:
             # add additional info to provenance here, in this case the input data object reference
             provenance[0]['input_ws_objects'] = []
             provenance[0]['input_ws_objects'].append(params['workspace_name']+'/'+params['input_name'])
-            if 'intree' in params and params['intree'] != None:
-                provenance[0]['input_ws_objects'].append(params['workspace_name']+'/'+params['intree'])
             provenance[0]['service'] = 'kb_gblocks'
             provenance[0]['method'] = 'run_Gblocks'
 
@@ -471,40 +469,46 @@ class kb_gblocks:
         p.stdin.write("o"+"\n")  # open MSA file
         p.stdin.write(input_MSA_file_path+"\n")
 
-        if 'trim_level' in params and params['trim_level'] != None and params['trim_level'] != 0:
-             p.stdin.write("b"+"\n")
-             if params['trim_level'] >= 1:
-                  p.stdin.write("5"+"\n")  # set to "half"
-                  if params['trim_level'] == 2:
-                       p.stdin.write("5"+"\n")  # set to "all"
-                  else:
-                       raise ValueError ("trim_level ("+str(params['trim_level'])+") was not between 0-2")
-             p.stdin.write("m"+"\n")
+        if 'trim_level' in params and params['trim_level'] != None and int(params['trim_level']) != 0:
+            p.stdin.write("b"+"\n")
+            if int(params['trim_level']) >= 1:
+                self.log (console,"changing trim level")
+                p.stdin.write("5"+"\n")  # set to "half"
+                if int(params['trim_level']) == 2:
+                    self.log (console,"changing trim level")
+                    p.stdin.write("5"+"\n")  # set to "all"
+                else:
+                    raise ValueError ("trim_level ("+str(params['trim_level'])+") was not between 0-2")
+                p.stdin.write("m"+"\n")
 
         # flank must precede conserved because it acts us upper bound for acceptable conserved values
-        if 'min_seqs_for_flank' in params and params['min_seqs_for_flank'] != None and params['min_seqs_for_flank'] != 0:
-             p.stdin.write("b"+"\n")
-             p.stdin.write("2"+"\n")
-             p.stdin.write(str(params['min_seqs_for_flank'])+"\n")
-             p.stdin.write("m"+"\n")
+        if 'min_seqs_for_flank' in params and params['min_seqs_for_flank'] != None and int(params['min_seqs_for_flank']) != 0:
+            self.log (console,"changing min_seqs_for_flank")
+            p.stdin.write("b"+"\n")
+            p.stdin.write("2"+"\n")
+            p.stdin.write(str(params['min_seqs_for_flank'])+"\n")
+            p.stdin.write("m"+"\n")
 
-        if 'min_seqs_for_conserved' in params and params['min_seqs_for_conserved'] != None and params['min_seqs_for_conserved'] != 0:
-             p.stdin.write("b"+"\n")
-             p.stdin.write("1"+"\n")
-             p.stdin.write(str(params['min_seqs_for_conserved'])+"\n")
-             p.stdin.write("m"+"\n")
+        if 'min_seqs_for_conserved' in params and params['min_seqs_for_conserved'] != None and int(params['min_seqs_for_conserved']) != 0:
+            self.log (console,"changing min_seqs_for_conserved")
+            p.stdin.write("b"+"\n")
+            p.stdin.write("1"+"\n")
+            p.stdin.write(str(params['min_seqs_for_conserved'])+"\n")
+            p.stdin.write("m"+"\n")
 
-        if 'max_pos_contig_nonconserved' in params and params['max_pos_contig_nonconserved'] != None and params['max_pos_contig_nonconserved'] > -1:
-             p.stdin.write("b"+"\n")
-             p.stdin.write("3"+"\n")
-             p.stdin.write(str(params['max_pos_contig_nonconserved'])+"\n")
-             p.stdin.write("m"+"\n")
+        if 'max_pos_contig_nonconserved' in params and params['max_pos_contig_nonconserved'] != None and int(params['max_pos_contig_nonconserved']) > -1:
+            self.log (console,"changing max_pos_contig_nonconserved")
+            p.stdin.write("b"+"\n")
+            p.stdin.write("3"+"\n")
+            p.stdin.write(str(params['max_pos_contig_nonconserved'])+"\n")
+            p.stdin.write("m"+"\n")
 
         if 'min_block_len' in params and params['min_block_len'] != None and params['min_block_len'] != 0:
-             p.stdin.write("b"+"\n")
-             p.stdin.write("4"+"\n")
-             p.stdin.write(str(params['min_block_len'])+"\n")
-             p.stdin.write("m"+"\n")
+            self.log (console,"changing min_block_len")
+            p.stdin.write("b"+"\n")
+            p.stdin.write("4"+"\n")
+            p.stdin.write(str(params['min_block_len'])+"\n")
+            p.stdin.write("m"+"\n")
         
         p.stdin.write("g"+"\n")  # get blocks
         p.stdin.write("q"+"\n")  # quit
@@ -575,7 +579,8 @@ class kb_gblocks:
         if L_alignment == 0:
             self.log(invalid_msgs,"params produced no blocks.  Consider changing to less stringent values")
         else:
-            if 'remove_mask_positions_flag' in params and params['remove_mask_positions_flag'] != None and params['remove_mask_positions_flag'] != 0:
+            if 'remove_mask_positions_flag' in params and params['remove_mask_positions_flag'] != None and int(params['remove_mask_positions_flag']) != 0:
+                self.log (console,"removing mask positions")
                 mask = []
                 new_alignment = dict()
                 for i in range(0,L_alignment):
