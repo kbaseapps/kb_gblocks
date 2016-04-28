@@ -400,8 +400,8 @@ class kb_gblocks:
 
             self.log(console,"BUILDING RETURN OBJECT")
             returnVal = { 'report_name': reportName,
-                          'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]),
-                          'output_ref': None
+                          'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4])
+#                          'output_ref': None
                           }
             self.log(console,"run_Gblocks DONE")
             return [returnVal]
@@ -695,7 +695,7 @@ class kb_gblocks:
 
         self.log(console,"BUILDING RETURN OBJECT")
         returnVal = { 'report_name': reportName,
-                      'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]),
+                      'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4])
 #                      'output_ref': str(new_obj_info[6]) + '/' + str(new_obj_info[0]) + '/' + str(new_obj_info[4])
                       }
         self.log(console,"run_Gblocks DONE")
