@@ -437,8 +437,8 @@ class kb_gblocks:
             os.makedirs(output_dir)
 
         # Gblocks names output blocks MSA by appending "-gb" to input file
-        #output_GBLOCKS_file_path = os.path.join(output_dir, params['input_name']+'-gb');
-        output_GBLOCKS_file_path = input_MSA_file_path+'-gb');
+        #output_GBLOCKS_file_path = os.path.join(output_dir, params['input_name']+'-gb')
+        output_GBLOCKS_file_path = input_MSA_file_path+'-gb'
 
         # Gblocks is interactive and only accepts args from pipe input
         #if 'arg' in params and params['arg'] != None and params['arg'] != 0:
