@@ -450,8 +450,8 @@ class kb_gblocks:
 
         # FastTree requires shell=True in order to see input data
         env = os.environ.copy()
-        p = subprocess.Popen(fasttree_cmd, \
         #joined_fasttree_cmd = ' '.join(fasttree_cmd)  # redirect out doesn't work with subprocess unless you join command first
+        #p = subprocess.Popen([joined_fasttree_cmd], \
         p = subprocess.Popen(gblocks_cmd, \
                              cwd = self.scratch, \
                              stdin = subprocess.PIPE, \
