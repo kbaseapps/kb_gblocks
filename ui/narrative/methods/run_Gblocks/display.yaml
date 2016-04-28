@@ -31,7 +31,7 @@ parameters :
         ui-name : |
             MSA Description
         short-hint : |
-            Describe Contents of the Output MSA
+            Describe Contents of the Output BLOCKS MSA
         placeholder: |
             Enter Description
     input_name:
