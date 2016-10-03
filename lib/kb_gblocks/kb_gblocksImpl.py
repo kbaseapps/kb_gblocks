@@ -381,7 +381,7 @@ class kb_gblocks:
                 'text_message':report
                 }
 
-            reportName = 'gblocks_report_'+str(hex(uuid.getnode()))
+            reportName = 'gblocks_report_'+str(uuid.uuid4())
             report_obj_info = ws.save_objects({
 #                'id':info[6],
                 'workspace':params['workspace_name'],
@@ -676,7 +676,7 @@ class kb_gblocks:
                 'text_message':report
                 }
 
-        reportName = 'gblocks_report_'+str(hex(uuid.getnode()))
+        reportName = 'gblocks_report_'+str(uuid.uuid4())
         report_obj_info = ws.save_objects({
 #                'id':info[6],
                 'workspace':params['workspace_name'],
