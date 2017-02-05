@@ -128,7 +128,7 @@ $return is a kb_gblocks.Gblocks_Output
 Gblocks_Params is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a kb_gblocks.workspace_name
 	desc has a value which is a string
-	input_name has a value which is a kb_gblocks.data_obj_name
+	input_ref has a value which is a kb_gblocks.data_obj_ref
 	output_name has a value which is a kb_gblocks.data_obj_name
 	trim_level has a value which is an int
 	min_seqs_for_conserved has a value which is an int
@@ -137,11 +137,11 @@ Gblocks_Params is a reference to a hash where the following keys are defined:
 	min_block_len has a value which is an int
 	remove_mask_positions_flag has a value which is an int
 workspace_name is a string
+data_obj_ref is a string
 data_obj_name is a string
 Gblocks_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a kb_gblocks.data_obj_name
 	report_ref has a value which is a kb_gblocks.data_obj_ref
-data_obj_ref is a string
 
 </pre>
 
@@ -154,7 +154,7 @@ $return is a kb_gblocks.Gblocks_Output
 Gblocks_Params is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a kb_gblocks.workspace_name
 	desc has a value which is a string
-	input_name has a value which is a kb_gblocks.data_obj_name
+	input_ref has a value which is a kb_gblocks.data_obj_ref
 	output_name has a value which is a kb_gblocks.data_obj_name
 	trim_level has a value which is an int
 	min_seqs_for_conserved has a value which is an int
@@ -163,11 +163,11 @@ Gblocks_Params is a reference to a hash where the following keys are defined:
 	min_block_len has a value which is an int
 	remove_mask_positions_flag has a value which is an int
 workspace_name is a string
+data_obj_ref is a string
 data_obj_name is a string
 Gblocks_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a kb_gblocks.data_obj_name
 	report_ref has a value which is a kb_gblocks.data_obj_ref
-data_obj_ref is a string
 
 
 =end text
@@ -206,9 +206,10 @@ Method for trimming MSAs of either DNA or PROTEIN sequences
 	}
     }
 
-    my $result = $self->{client}->call($self->{url}, $self->{headers}, {
-	method => "kb_gblocks.run_Gblocks",
-	params => \@args,
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "kb_gblocks.run_Gblocks",
+	    params => \@args,
     });
     if ($result) {
 	if ($result->is_error) {
@@ -229,6 +230,36 @@ Method for trimming MSAs of either DNA or PROTEIN sequences
 }
  
   
+sub status
+{
+    my($self, @args) = @_;
+    if ((my $n = @args) != 0) {
+        Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+                                   "Invalid argument count for function status (received $n, expecting 0)");
+    }
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+        method => "kb_gblocks.status",
+        params => \@args,
+    });
+    if ($result) {
+        if ($result->is_error) {
+            Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+                           code => $result->content->{error}->{code},
+                           method_name => 'status',
+                           data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+                          );
+        } else {
+            return wantarray ? @{$result->result} : $result->result->[0];
+        }
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method status",
+                        status_line => $self->{client}->status_line,
+                        method_name => 'status',
+                       );
+    }
+}
+   
 
 sub version {
     my ($self) = @_;
@@ -395,7 +426,7 @@ Gblocks Input Params
 a reference to a hash where the following keys are defined:
 workspace_name has a value which is a kb_gblocks.workspace_name
 desc has a value which is a string
-input_name has a value which is a kb_gblocks.data_obj_name
+input_ref has a value which is a kb_gblocks.data_obj_ref
 output_name has a value which is a kb_gblocks.data_obj_name
 trim_level has a value which is an int
 min_seqs_for_conserved has a value which is an int
@@ -413,7 +444,7 @@ remove_mask_positions_flag has a value which is an int
 a reference to a hash where the following keys are defined:
 workspace_name has a value which is a kb_gblocks.workspace_name
 desc has a value which is a string
-input_name has a value which is a kb_gblocks.data_obj_name
+input_ref has a value which is a kb_gblocks.data_obj_ref
 output_name has a value which is a kb_gblocks.data_obj_name
 trim_level has a value which is an int
 min_seqs_for_conserved has a value which is an int

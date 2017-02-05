@@ -26,7 +26,7 @@ module kb_gblocks {
     typedef structure {
         workspace_name workspace_name;
 	string         desc;
-	data_obj_name  input_name;
+	data_obj_ref   input_ref;
         data_obj_name  output_name;
 	int            trim_level;                   /* 0=no gaps allowed, 1=half gaps allowed, 2=all gaps allowed */
 	int            min_seqs_for_conserved;       /* 0=use MSA-depth-derived default */

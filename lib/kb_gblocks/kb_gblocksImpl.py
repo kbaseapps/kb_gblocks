@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #BEGIN_HEADER
 import os
 import sys
@@ -39,12 +40,16 @@ class kb_gblocks:
 **
     '''
 
-    ######## WARNING FOR GEVENT USERS #######
+    ######## WARNING FOR GEVENT USERS ####### noqa
     # Since asynchronous IO can lead to methods - even the same method -
     # interrupting each other, you must be *very* careful when using global
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
-    #########################################
+    ######################################### noqa
+    VERSION = "0.0.1"
+    GIT_URL = "https://github.com/kbaseapps/kb_gblocks.git"
+    GIT_COMMIT_HASH = "99c5ef313ff067f972388722063bf0d98cca8fe3"
+
     #BEGIN_CLASS_HEADER
     workspaceURL = None
     shockURL = None
@@ -222,7 +227,32 @@ class kb_gblocks:
         #END_CONSTRUCTOR
         pass
 
+
     def run_Gblocks(self, ctx, params):
+        """
+        Method for trimming MSAs of either DNA or PROTEIN sequences
+        **
+        **        input_type: MSA
+        **        output_type: MSA
+        :param params: instance of type "Gblocks_Params" (Gblocks Input
+           Params) -> structure: parameter "workspace_name" of type
+           "workspace_name" (** The workspace object refs are of form: ** ** 
+           objects = ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "desc" of String, parameter "input_ref" of type
+           "data_obj_ref", parameter "output_name" of type "data_obj_name",
+           parameter "trim_level" of Long, parameter "min_seqs_for_conserved"
+           of Long, parameter "min_seqs_for_flank" of Long, parameter
+           "max_pos_contig_nonconserved" of Long, parameter "min_block_len"
+           of Long, parameter "remove_mask_positions_flag" of Long
+        :returns: instance of type "Gblocks_Output" (Gblocks Output) ->
+           structure: parameter "report_name" of type "data_obj_name",
+           parameter "report_ref" of type "data_obj_ref"
+        """
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN run_Gblocks
@@ -706,4 +736,13 @@ class kb_gblocks:
             raise ValueError('Method run_Gblocks return value ' +
                              'returnVal is not type dict as required.')
         # return the results
+        return [returnVal]
+    def status(self, ctx):
+        #BEGIN_STATUS
+        returnVal = {'state': "OK",
+                     'message': "",
+                     'version': self.VERSION,
+                     'git_url': self.GIT_URL,
+                     'git_commit_hash': self.GIT_COMMIT_HASH}
+        #END_STATUS
         return [returnVal]
