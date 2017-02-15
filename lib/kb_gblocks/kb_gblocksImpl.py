@@ -660,8 +660,10 @@ class kb_gblocks:
             MSA_out['alignment'] = alignment
             MSA_out['name'] = params['output_name']
             MSA_out['alignment_length'] = L_alignment
+            MSA_name = params['output_name']
+            MSA_description = ''
             if 'desc' in params and params['desc'] != None and params['desc'] != '':
-                MSA_out['desc'] = params['desc']
+                MSA_out['desc'] = MSA_description = params['desc']
 
             # Store MSA_out
             #
