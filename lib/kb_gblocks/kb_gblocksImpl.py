@@ -583,6 +583,7 @@ class kb_gblocks:
 
         # reformat output to single-line FASTA MSA and check that output not empty (often happens when param combinations don't produce viable blocks
         #
+        output_fasta_buf = []
         id_order = []
         this_id = None
         ids = dict()
@@ -594,11 +595,13 @@ class kb_gblocks:
                 line = line.rstrip()
                 if line.startswith('>'):
                     this_id = line[1:]
+                    output_fasta_buf.append ('>'+re.sub('\s','_',default_row_labels[this_id]))
                     id_order.append(this_id)
                     alignment[this_id] = ''
                     if L_alignment != 0 and not L_alignment_set:
                          L_alignment_set = True
                     continue
+                output_fasta_buf.append (line)
                 for c in line:
                     if c != ' ' and c != "\n":
                         alignment[this_id] += c
@@ -626,16 +629,10 @@ class kb_gblocks:
 
             L_alignment = len(alignment[id_order[0]])
 
-#            # actually, don't have to write to file at all
-#            records = []
-#            for row_id in id_order:
-#                records.extend(['>'+row_id,
-#                                alignment[row_id]
-#                               ])
-#
-#            output_MSA_file_path = os.path.join(output_dir, params['output_name']+'.fasta');
-#            with open(output_MSA_file_path,'w',0) as output_MSA_file_handle:
-#                input_MSA_file_handle.write("\n".join(records)+"\n")
+            # write fasta with tidied ids
+            output_MSA_file_path = os.path.join(output_dir, params['output_name']+'.fasta');
+            with open(output_MSA_file_path,'w',0) as output_MSA_file_handle:
+                output_MSA_file_handle.write("\n".join(output_fasta_buf)+"\n")
 
 
         # Upload results
@@ -718,23 +715,24 @@ class kb_gblocks:
                                 }
                 
             clw_buf = []
-            clw_buf.append ('CLUSTALW '+MSA_name+': '+MSA_description)
+            clw_buf.append ('CLUSTALW format of GBLOCKS trimmed MSA '+MSA_name+': '+MSA_description)
             clw_buf.append ('')
 
             long_id_len = 0
             aln_pos_by_id = dict()
             for row_id in row_order:
                 aln_pos_by_id[row_id] = 0
-                if long_id_len < len(row_id):
-                    long_id_len = len(row_id)
+                row_id_disp = default_row_labels[row_id]
+                if long_id_len < len(row_id_disp):
+                    long_id_len = len(row_id_disp)
 
             full_row_cnt = alignment_length // max_row_width
             if alignment_length % max_row_width == 0:
                 full_row_cnt -= 1
             for chunk_i in range (full_row_cnt + 1):
                 for row_id in row_order:
-                    row_id_disp = row_id
-                    for sp_i in range (long_id_len-len(row_id)):
+                    row_id_disp = re.sub('\s','_',default_row_labels[row_id])
+                    for sp_i in range (long_id_len-len(row_id_disp)):
                         row_id_disp += ' '
 
                     aln_chunk_upper_bound = (chunk_i+1)*max_row_width
