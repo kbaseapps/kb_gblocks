@@ -48,9 +48,9 @@ class kb_gblocks:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "0.0.1"
-    GIT_URL = "https://github.com/kbaseapps/kb_gblocks.git"
-    GIT_COMMIT_HASH = "99c5ef313ff067f972388722063bf0d98cca8fe3"
+    VERSION = "0.0.2"
+    GIT_URL = "https://github.com/kbaseapps/kb_gblocks"
+    GIT_COMMIT_HASH = "d2df720f5c754ac1253388e939991694d0f36670"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
