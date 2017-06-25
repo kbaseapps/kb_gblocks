@@ -610,7 +610,7 @@ class kb_gblocks:
         if L_alignment == 0:
             self.log(invalid_msgs,"params produced no blocks.  Consider changing to less stringent values")
         else:
-            if 'remove_mask_positions_flag' in params and params['remove_mask_positions_flag'] != None and int(params['remove_mask_positions_flag']) != 0:
+            if 'remove_mask_positions_flag' in params and params['remove_mask_positions_flag'] != None and params['remove_mask_positions_flag'] != '' and params['remove_mask_positions_flag'] != '0':
                 self.log (console,"removing mask positions")
                 mask = []
                 new_alignment = dict()
