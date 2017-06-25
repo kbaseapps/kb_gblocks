@@ -49,8 +49,8 @@ class kb_gblocks:
     # the latter method is running.
     ######################################### noqa
     VERSION = "0.0.2"
-    GIT_URL = "https://github.com/kbaseapps/kb_gblocks"
-    GIT_COMMIT_HASH = "d2df720f5c754ac1253388e939991694d0f36670"
+    GIT_URL = "https://github.com/dcchivian/kb_gblocks"
+    GIT_COMMIT_HASH = "4fe789124fe5ecce2b2d05399f671f7ceb5dbb75"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -610,7 +610,7 @@ class kb_gblocks:
         if L_alignment == 0:
             self.log(invalid_msgs,"params produced no blocks.  Consider changing to less stringent values")
         else:
-            if 'remove_mask_positions_flag' in params and params['remove_mask_positions_flag'] != None and int(params['remove_mask_positions_flag']) != 0:
+            if 'remove_mask_positions_flag' in params and params['remove_mask_positions_flag'] != None and params['remove_mask_positions_flag'] != '' and params['remove_mask_positions_flag'] != '0':
                 self.log (console,"removing mask positions")
                 mask = []
                 new_alignment = dict()

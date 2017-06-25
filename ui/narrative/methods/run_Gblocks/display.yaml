@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: GBLOCKS Trim Multiple Sequence Alignment (MSA)
+name: GBLOCKS Trim Multiple Sequence Alignment (MSA) - v0.91b
 tooltip: |
     Trim a Multiple Sequence Alignment (MSA) to remove hypervariable (gappy) regions with Gblocks
 screenshots: []
