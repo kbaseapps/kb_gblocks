@@ -49,8 +49,8 @@ class kb_gblocks:
     # the latter method is running.
     ######################################### noqa
     VERSION = "0.0.2"
-    GIT_URL = "https://github.com/kbaseapps/kb_gblocks"
-    GIT_COMMIT_HASH = "d2df720f5c754ac1253388e939991694d0f36670"
+    GIT_URL = "https://github.com/dcchivian/kb_gblocks"
+    GIT_COMMIT_HASH = "4fe789124fe5ecce2b2d05399f671f7ceb5dbb75"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None

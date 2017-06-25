@@ -1,42 +1,36 @@
 FROM kbase/kbase:sdkbase.latest
 MAINTAINER KBase Developer
 # -----------------------------------------
-
-# Insert apt-get instructions here to install
-# any required dependencies for your module.
-
-# RUN apt-get update
-
-# -----------------------------------------
-
-# Update Transform (should go away eventually)
-#RUN \
-#  . /kb/dev_container/user-env.sh && \
-#  cd /kb/dev_container/modules && \
-#  rm -rf transform && \ 
-#  git clone https://github.com/kbase/transform -b develop
-
-# setup the transform, but ignore errors because sample data cannot be found!
-#RUN \
-#  . /kb/dev_container/user-env.sh; \
-#  cd /kb/dev_container/modules/transform/t/demo; \
-#  python setup.py; \
-#  exit 0;
-
-
+# In this section, you can install any system dependencies required
+# to run your App.  For instance, you could place an apt-get update or
+# install line here, a git checkout to download code, or run any other
+# installation scripts.
 
 # RUN apt-get update
 
+# Here we install a python coverage tool and an
+# https library that is out of date in the base image.
+
+RUN pip install coverage
+
+# update security libraries in the base image
+RUN pip install cffi --upgrade \
+    && pip install pyopenssl --upgrade \
+    && pip install ndg-httpsclient --upgrade \
+    && pip install pyasn1 --upgrade \
+    && pip install requests --upgrade \
+    && pip install 'requests[security]' --upgrade
+
+
 # -----------------------------------------
 
-# Install SDK Module
-#
-RUN mkdir -p /kb/module
 COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
-WORKDIR /kb/module
-RUN make
+RUN chmod -R a+rw /kb/module
 
+WORKDIR /kb/module
+
+RUN make all
 
 # Install Gblocks
 #
@@ -47,8 +41,6 @@ RUN \
     chmod 555 Gblocks_0.91b/Gblocks && \
     ln -s Gblocks_0.91b/Gblocks Gblocks
 
-
-WORKDIR /kb/module
 ENTRYPOINT [ "./scripts/entrypoint.sh" ]
 
 CMD [ ]
