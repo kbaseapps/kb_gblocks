@@ -48,7 +48,7 @@
         {
             "id": "trim_level",
             "optional": true,
-            "advanced": false,
+            "advanced": true,
             "allow_multiple": false,
             "default_values": [ "1" ],
             "field_type": "text",
@@ -61,7 +61,7 @@
         {
             "id": "min_seqs_for_conserved",
             "optional": true,
-            "advanced": false,
+            "advanced": true,
             "allow_multiple": false,
             "default_values": [ "0" ],
             "field_type": "text",
@@ -73,7 +73,7 @@
         {
             "id": "min_seqs_for_flank",
             "optional": true,
-            "advanced": false,
+            "advanced": true,
             "allow_multiple": false,
             "default_values": [ "0" ],
             "field_type": "text",
@@ -85,7 +85,7 @@
         {
             "id": "max_pos_contig_nonconserved",
             "optional": true,
-            "advanced": false,
+            "advanced": true,
             "allow_multiple": false,
             "default_values": [ "8" ],
             "field_type": "text",
@@ -97,7 +97,7 @@
         {
             "id": "min_block_len",
             "optional": true,
-            "advanced": false,
+            "advanced": true,
             "allow_multiple": false,
             "default_values": [ "10" ],
             "field_type": "text",
@@ -109,7 +109,7 @@
         {
             "id": "remove_mask_positions_flag",
             "optional": true,
-            "advanced": false,
+            "advanced": true,
             "allow_multiple": false,
             "default_values": [ "" ],
             "field_type": "checkbox",
