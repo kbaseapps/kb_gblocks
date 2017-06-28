@@ -55,14 +55,14 @@ parameters :
         short-hint : |
             Minimum number of sequences required with a conserved residue.
         long-hint : |
-            Minimum number of sequences required with a conserved residue before a position (column) is considered a "Conserved Position". 0=Use MSA-derived default (e.g. for 14 seqs, default is 8).  Value must be %3e= than N/2+1 and %3c= Min Seqs For Flank Pos, where N=number of sequences.
+            Minimum number of sequences required with a conserved residue before a position (column) is considered a "Conserved Position". 0=Use MSA-derived default (e.g. for 14 seqs, default is 8).  Value must be &gt;= than N/2+1 and &lt;= Min Seqs For Flank Pos, where N=number of sequences.
     min_seqs_for_flank:
         ui-name : |
             Min Seqs for Flank Pos
         short-hint : |
             Minimum number of sequences required with a residue in a position (column) flanking a conserved position.
         long-hint : |
-            Minimum number of sequences required with a residue in a position (column) flanking a conserved position before being considered a "Flank Position". 0=Use MSA-derived default (e.g. for 14 seqs, default is 11).  Value must be %3e= Min Seqs for Conserved Pos and %3c= N, where N=number of sequences.
+            Minimum number of sequences required with a residue in a position (column) flanking a conserved position before being considered a "Flank Position". 0=Use MSA-derived default (e.g. for 14 seqs, default is 11).  Value must be %gt;= Min Seqs for Conserved Pos and &lt;= N, where N=number of sequences.
     max_pos_contig_nonconserved:
         ui-name : |
             Max Num Non-Conserved Pos
