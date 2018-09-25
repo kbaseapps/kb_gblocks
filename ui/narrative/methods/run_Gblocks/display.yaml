@@ -4,7 +4,7 @@
 name: GBLOCKS Trim Multiple Sequence Alignment (MSA) - v0.91b
 tooltip: |
     Trim a Multiple Sequence Alignment (MSA) to remove hypervariable (gappy) regions with Gblocks
-screenshots: 
+screenshots:
 
     - GBLOCKS_input_widget.png
     - GBLOCKS_output_widget.png
@@ -90,10 +90,17 @@ parameters :
 
 description : |
     <p>Gblocks 0.91b from http://molevol.cmima.csic.es/castresana/Gblocks.html</p>
-    <p>Please cite:</p>
-    <p><A HREF="http://sysbio.oxfordjournals.org/content/56/4/564.long">Talavera G1, Castresana J. (2007) Improvement of phylogenies after removing divergent and ambiguously aligned blocks from protein sequence alignments. Syst Biol. 2007 Aug;56(4):564-77.</A> doi:10.1080/10635150701472164</p>
-    <p><A HREF="http://mbe.oxfordjournals.org/content/17/4/540.long">Castresana J. (2000) Selection of conserved blocks from multiple alignments for their use in phylogenetic analysis. Mol Biol Evol. 2000 Apr;17(4):540-52.</A> PMID: 10742046</p>
-    <p><hr></p>
     <p><i>Implemented for KBase by <a href="https://github.com/dcchivian">Dylan Chivian</a> (<a href="mailto:DCChivian@lbl.gov">DCChivian@lbl.gov</a>)</i></p>
     <p><hr></p>
     <p>This method trims Multiple Sequence Alignments (MSAs) to capture the conserved blocks that may be more reliable regions from which to compare evolutionary rates, such as for tree building.  It uses the method Gblocks.</p>
+
+publications :
+    -
+        display-text: |
+            Castresana J. Selection of Conserved Blocks from Multiple Alignments for Their Use in Phylogenetic Analysis. Mol Biol Evol. 2000;17: 540–552. doi:10.1093/oxfordjournals.molbev.a026334
+        link: https://academic.oup.com/mbe/article/17/4/540/1127654
+
+    -
+        display-text: |
+            Talavera G, Castresana J, Kjer K, Page R, Sullivan J. Improvement of Phylogenies after Removing Divergent and Ambiguously Aligned Blocks from Protein Sequence Alignments. Syst Biol. 2007;56: 564–577. doi:10.1080/10635150701472164
+        link: https://academic.oup.com/sysbio/article/56/4/564/1682121
