@@ -843,7 +843,7 @@ class kb_gblocks:
                 #'message': '',
                 'message': clw_buf_str,
                 'direct_html': '',
-                'direct_html_index': None,
+                #'direct_html_index': None,
                 'file_links': [],
                 'html_links': [],
                 'workspace_name': params['workspace_name'],
