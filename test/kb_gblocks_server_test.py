@@ -8,7 +8,7 @@ from os import environ
 from ConfigParser import ConfigParser
 from pprint import pprint
 
-from biokbase.workspace.client import Workspace as workspaceService
+from installed_clients.WorkspaceClient import Workspace as workspaceService
 from kb_gblocks.kb_gblocksImpl import kb_gblocks
 
 
