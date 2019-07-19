@@ -18,11 +18,12 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import generic_protein
-from biokbase.workspace.client import Workspace as workspaceService
+
+from installed_clients.WorkspaceClient import Workspace as workspaceService
 from requests_toolbelt import MultipartEncoder
 from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
-from DataFileUtil.DataFileUtilClient import DataFileUtil as DFUClient
-from KBaseReport.KBaseReportClient import KBaseReport
+from installed_clients.DataFileUtilClient import DataFileUtil as DFUClient
+from installed_clients.KBaseReportClient import KBaseReport
 
 # silence whining
 import requests
@@ -48,9 +49,9 @@ class kb_gblocks:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.0.1"
+    VERSION = "1.0.4"
     GIT_URL = "https://github.com/kbaseapps/kb_gblocks"
-    GIT_COMMIT_HASH = "4fe789124fe5ecce2b2d05399f671f7ceb5dbb75"
+    GIT_COMMIT_HASH = "35092cb8f694d823cd5c47a1fc25804a9e751e89"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -843,7 +844,7 @@ class kb_gblocks:
                 #'message': '',
                 'message': clw_buf_str,
                 'direct_html': '',
-                'direct_html_index': None,
+                #'direct_html_link_index': 0,
                 'file_links': [],
                 'html_links': [],
                 'workspace_name': params['workspace_name'],
