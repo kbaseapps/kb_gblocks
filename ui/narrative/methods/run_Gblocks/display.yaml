@@ -1,12 +1,11 @@
 #
 # define display information
 #
-name: GBLOCKS Trim Multiple Sequence Alignment (MSA) - v0.91b
+name: Trim a Multiple Sequence Alignment (MSA) with Gblocks - v0.91b
 tooltip: |
-    Trim a Multiple Sequence Alignment (MSA) to remove hypervariable (gappy) regions with Gblocks
+    Trim a Multiple Sequence Alignment (MSA) to remove hypervariable or poorly aligned regions in protein or nucleotide alignments with Gblocks.
 screenshots:
 
-    - GBLOCKS_input_widget.png
     - GBLOCKS_output_widget.png
 
 icon: gblocks-cyan.png
@@ -34,65 +33,56 @@ parameters :
         ui-name : |
             MSA Description
         short-hint : |
-            Describe Contents of the Output BLOCKS MSA
+            Describe the contents of the output Gblocks MSA.
         placeholder: |
             Enter Description
     input_ref:
         ui-name : |
             Input MSA
         short-hint : |
-            Multiple Sequence Alignment to trim.  Data type is MSA.
+            The MSA to trim.
     output_name:
         ui-name : |
-            Output BLOCKS MSA
+            Output Gblocks MSA
         short-hint : |
-            Multiple Sequence Alignment of BLOCKS output.  Data type is MSA.
+            The name of the output Gblocks MSA.
     trim_level:
         ui-name : |
             Trim Level
         short-hint : |
-            0=No gaps permitted, 1=Half occupancy, 2=Gaps ignored
+            Specify the level of teimming to be used. 0=No gaps permitted; 1=Half occupancy; 2=Gaps ignored.
     min_seqs_for_conserved:
         ui-name : |
             Min Seqs for Conserved Pos
         short-hint : |
-            Minimum number of sequences required with a conserved residue.
-        long-hint : |
-            Minimum number of sequences required with a conserved residue before a position (column) is considered a "Conserved Position". 0=Use MSA-derived default (e.g. for 14 seqs, default is 8).  Value must be &gt;= than N/2+1 and &lt;= Min Seqs For Flank Pos, where N=number of sequences.
+            The minimum number of sequences required with a conserved residue before a position (column) is considered a "Conserved Position". 0=Use MSA-derived default (e.g. for 14 seqs, default is 8).  Value must be &gt;= than N/2+1 and &lt;= Min Seqs For Flank Pos, where N=number of sequences.
     min_seqs_for_flank:
         ui-name : |
             Min Seqs for Flank Pos
         short-hint : |
-            Minimum number of sequences required with a residue in a position (column) flanking a conserved position.
-        long-hint : |
-            Minimum number of sequences required with a residue in a position (column) flanking a conserved position before being considered a "Flank Position". 0=Use MSA-derived default (e.g. for 14 seqs, default is 11).  Value must be %gt;= Min Seqs for Conserved Pos and &lt;= N, where N=number of sequences.
+            The minimum number of sequences required with a residue in a position (column) flanking a conserved position before being considered a "Flank Position". 0=Use MSA-derived default (e.g. for 14 seqs, default is 11).  Value must be %gt;= Min Seqs for Conserved Pos and &lt;= N, where N=number of sequences.
     max_pos_contig_nonconserved:
         ui-name : |
             Max Num Non-Conserved Pos
         short-hint : |
-            Maximum number of non-conserved positions (columns) that may be included in a block.
-        long-hint : |
-            Maximum number of non-conserved positions (columns) that may be included in a block; 8=default.  Value must be >= 0 and <= number of aligned positions (32000 upper bound).
+            The maximum number of non-conserved positions (columns) that may be included in a block; 8=default.  Value must be >= 0 and <= number of aligned positions (32000 upper bound).
     min_block_len:
         ui-name : |
             Min Block Len
         short-hint : |
-            Minimum number of positions (columns) required to include a block in the output MSA.
-        long-hint : |
-            Minimum number of positions (columns) required to include a block in the output MSA; 10=default.  Value must be >= 2 and <= number of aligned positions (32000 upper bound).
+            The minimum number of positions (columns) required to include a block in the output MSA (default is 10). Value must be >= 2 and <= number of aligned positions (32000 upper bound).
     remove_mask_positions_flag:
         ui-name : |
             Remove Masked Pos?
         short-hint : |
-            "X" masking characters in first row?
-        long-hint : |
-            If first row of MSA has "X" masking characters, remove those positions (columns) from output MSA; Usually used for hypervariable regions (e.g. 16S); OFF=default.
+            If the first row of the MSA has "X" masking characters, remove those positions (columns) from output MSA. This is usually used for hypervariable regions (e.g. 16S). Note that the default is OFF.
 
 description : |
-    <p>Gblocks 0.91b from http://molevol.cmima.csic.es/castresana/Gblocks.html</p>
-    <p><i>Implemented for KBase by <a href="https://github.com/dcchivian">Dylan Chivian</a> (<a href="mailto:DCChivian@lbl.gov">DCChivian@lbl.gov</a>)</i></p>
-    <p><hr></p>
-    <p>This method trims Multiple Sequence Alignments (MSAs) to capture the conserved blocks that may be more reliable regions from which to compare evolutionary rates, such as for tree building.  It uses the method Gblocks.</p>
+    <p>This App uses Gblocks trims a Multiple Sequence Alignment (MSA) to remove poorly aligned or highly divergent regions, revealing the better aligned regions that may be more reliable for estimation of evolutionary rates, such as for phylogeny reconstruction. Further information on Gblocks can be found <a href=”http://molevol.cmima.csic.es/castresana/Gblocks/Gblocks_documentation.html”>here</a>.</p>
+
+    <p>Gblocks 0.91b <a href=”http://molevol.cmima.csic.es/castresana/Gblocks.html”>source</a>.</p>
+
+    <p><strong>Team members who implemented App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
 
 publications :
     -
