@@ -49,9 +49,9 @@ class kb_gblocks:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.0.4"
+    VERSION = "1.0.5"
     GIT_URL = "https://github.com/kbaseapps/kb_gblocks"
-    GIT_COMMIT_HASH = "35092cb8f694d823cd5c47a1fc25804a9e751e89"
+    GIT_COMMIT_HASH = "9535c5c0098bb93417256789351cbde534657e22"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -67,129 +67,6 @@ class kb_gblocks:
             target.append(message)
         print(message)
         sys.stdout.flush()
-
-    def get_single_end_read_library(self, ws_data, ws_info, forward):
-        pass
-
-    def get_feature_set_seqs(self, ws_data, ws_info):
-        pass
-
-    def get_genome_feature_seqs(self, ws_data, ws_info):
-        pass
-
-    def get_genome_set_feature_seqs(self, ws_data, ws_info):
-        pass
-
-    # Helper script borrowed from the transform service, logger removed
-    #
-    def upload_file_to_shock(self,
-                             console,  # DEBUG
-                             shock_service_url = None,
-                             filePath = None,
-                             ssl_verify = True,
-                             token = None):
-        """
-        Use HTTP multi-part POST to save a file to a SHOCK instance.
-        """
-        self.log(console,"UPLOADING FILE "+filePath+" TO SHOCK")
-
-        if token is None:
-            raise Exception("Authentication token required!")
-
-        #build the header
-        header = dict()
-        header["Authorization"] = "Oauth {0}".format(token)
-        if filePath is None:
-            raise Exception("No file given for upload to SHOCK!")
-
-        dataFile = open(os.path.abspath(filePath), 'rb')
-        m = MultipartEncoder(fields={'upload': (os.path.split(filePath)[-1], dataFile)})
-        header['Content-Type'] = m.content_type
-
-        #logger.info("Sending {0} to {1}".format(filePath,shock_service_url))
-        try:
-            response = requests.post(shock_service_url + "/node", headers=header, data=m, allow_redirects=True, verify=ssl_verify)
-            dataFile.close()
-        except:
-            dataFile.close()
-            raise
-        if not response.ok:
-            response.raise_for_status()
-        result = response.json()
-        if result['error']:
-            raise Exception(result['error'][0])
-        else:
-            return result["data"]
-
-
-    def upload_SingleEndLibrary_to_shock_and_ws (self,
-                                                 ctx,
-                                                 console,  # DEBUG
-                                                 workspace_name,
-                                                 obj_name,
-                                                 file_path,
-                                                 provenance,
-                                                 sequencing_tech):
-
-        self.log(console,'UPLOADING FILE '+file_path+' TO '+workspace_name+'/'+obj_name)
-
-        # 1) upload files to shock
-        token = ctx['token']
-        forward_shock_file = self.upload_file_to_shock(
-            console,  # DEBUG
-            shock_service_url = self.shockURL,
-            filePath = file_path,
-            token = token
-            )
-        #pprint(forward_shock_file)
-        self.log(console,'SHOCK UPLOAD DONE')
-
-        # 2) create handle
-        self.log(console,'GETTING HANDLE')
-        hs = HandleService(url=self.handleURL, token=token)
-        forward_handle = hs.persist_handle({
-                                        'id' : forward_shock_file['id'], 
-                                        'type' : 'shock',
-                                        'url' : self.shockURL,
-                                        'file_name': forward_shock_file['file']['name'],
-                                        'remote_md5': forward_shock_file['file']['checksum']['md5']})
-
-        
-        # 3) save to WS
-        self.log(console,'SAVING TO WORKSPACE')
-        single_end_library = {
-            'lib': {
-                'file': {
-                    'hid':forward_handle,
-                    'file_name': forward_shock_file['file']['name'],
-                    'id': forward_shock_file['id'],
-                    'url': self.shockURL,
-                    'type':'shock',
-                    'remote_md5':forward_shock_file['file']['checksum']['md5']
-                },
-                'encoding':'UTF8',
-                'type':'fasta',
-                'size':forward_shock_file['file']['size']
-            },
-            'sequencing_tech':sequencing_tech
-        }
-        self.log(console,'GETTING WORKSPACE SERVICE OBJECT')
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        self.log(console,'SAVE OPERATION...')
-        new_obj_info = ws.save_objects({
-                        'workspace':workspace_name,
-                        'objects':[
-                            {
-                                'type':'KBaseFile.SingleEndLibrary',
-                                'data':single_end_library,
-                                'name':obj_name,
-                                'meta':{},
-                                'provenance':provenance
-                            }]
-                        })[0]
-        self.log(console,'SAVED TO WORKSPACE')
-
-        return new_obj_info[0]
 
     #END_CLASS_HEADER
 
@@ -830,7 +707,7 @@ class kb_gblocks:
 
             # make HTML reports
             #
-            # HERE
+            # HERE: move report from text message field to html to shrink report obj
 
 
             # build output report object
@@ -844,7 +721,7 @@ class kb_gblocks:
                 #'message': '',
                 'message': clw_buf_str,
                 'direct_html': '',
-                #'direct_html_link_index': 0,
+                'direct_html_link_index': 0,
                 'file_links': [],
                 'html_links': [],
                 'workspace_name': params['workspace_name'],

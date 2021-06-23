@@ -1,3 +1,8 @@
+### Verson 1.0.5
+- added Github Actions unit tests
+- removed old SHOCK upload code
+- fixed KBaseReport bug
+
 ### Verson 1.0.4
 - patch client libs to fix bad status line error
 - fix direct_html_index field name error

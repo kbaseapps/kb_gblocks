@@ -90,7 +90,10 @@ parameters :
 
 description : |
     <p>Gblocks 0.91b from http://molevol.cmima.csic.es/castresana/Gblocks.html</p>
-    <p><i>Implemented for KBase by <a href="https://github.com/dcchivian">Dylan Chivian</a> (<a href="mailto:DCChivian@lbl.gov">DCChivian@lbl.gov</a>)</i></p>
+
+    <p><strong>Team members who implemented algorithm in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://kbase.us/support/”>contact us</a>.</p>
+
+    
     <p><hr></p>
     <p>This method trims Multiple Sequence Alignments (MSAs) to capture the conserved blocks that may be more reliable regions from which to compare evolutionary rates, such as for tree building.  It uses the method Gblocks.</p>
 
