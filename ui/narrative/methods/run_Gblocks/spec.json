@@ -1,9 +1,9 @@
 {
-    "ver": "1.0.5",
+    "ver": "1.0.6",
     "authors": [
         "dylan"
     ],
-    "contact": "http://kbase.us/contact-us/",
+    "contact": "http://kbase.us/support/",
     "visible": true,
     "categories": ["active","sequence","comparative_genomics"],
     "widgets": {
