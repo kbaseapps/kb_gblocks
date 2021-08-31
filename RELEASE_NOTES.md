@@ -1,3 +1,6 @@
+### Version 1.0.7
+- removed input widget image from App Docs
+
 ### Version 1.0.6
 - fixed KBaseReport bug
 - fixed contact address in spec.json

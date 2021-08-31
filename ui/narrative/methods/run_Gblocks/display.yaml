@@ -6,7 +6,6 @@ tooltip: |
     Trim a Multiple Sequence Alignment (MSA) to remove hypervariable (gappy) regions with Gblocks
 screenshots:
 
-    - GBLOCKS_input_widget.png
     - GBLOCKS_output_widget.png
 
 icon: gblocks-cyan.png
