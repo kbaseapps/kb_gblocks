@@ -22,8 +22,12 @@ RUN make all
 # Install Gblocks
 #
 WORKDIR /kb/module
+
+# GONE
+#    curl http://molevol.cmima.csic.es/castresana/Gblocks/Gblocks_Linux64_0.91b.tar.Z > Gblocks_Linux64_0.91b.tar.Z && \
+
 RUN \
-    curl http://molevol.cmima.csic.es/castresana/Gblocks/Gblocks_Linux64_0.91b.tar.Z > Gblocks_Linux64_0.91b.tar.Z && \
+    cp tarballs/Gblocks_Linux64_0.91b.tar.Z . && \
     tar xfz Gblocks_Linux64_0.91b.tar.Z && \
     chmod 555 Gblocks_0.91b/Gblocks && \
     cp Gblocks_0.91b/Gblocks ./
