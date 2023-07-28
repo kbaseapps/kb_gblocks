@@ -1,3 +1,6 @@
+### Version 1.0.8
+- handle long gene IDs
+
 ### Version 1.0.7
 - removed input widget image from App Docs
 

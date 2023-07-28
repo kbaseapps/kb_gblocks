@@ -177,14 +177,21 @@ class kb_gblocks:
             input_MSA_file_path = os.path.join(self.scratch, input_name+".fasta")
             self.log(console, 'writing fasta file: '+input_MSA_file_path)
             records = []
+            short_row_id_to_row_id = dict()
+            short_row_id_i = 0
             for row_id in row_order:
                 #self.log(console,"row_id: '"+row_id+"'")  # DEBUG
-                #self.log(console,"alignment: '"+MSA_in['alignment'][row_id]+"'")  # DEBUG
-            # using SeqIO makes multiline sequences.  (Gblocks doesn't care, but FastTree doesn't like multiline, and I don't care enough to change code)
+                #self.log(console,"alignment: '"+MSA_in['alignment'][row_id]+"'")                  # DEBUG
+                # using SeqIO makes multiline sequences.  (Gblocks doesn't care, but FastTree doesn't like multiline, and I don't care enough to change code)
                 #record = SeqRecord(Seq(MSA_in['alignment'][row_id]), id=row_id, description=default_row_labels[row_id])
                 #records.append(record)
-            #SeqIO.write(records, input_MSA_file_path, "fasta")
-                records.extend(['>'+row_id,
+                #SeqIO.write(records, input_MSA_file_path, "fasta")
+
+                short_row_id_i += 1
+                short_row_id = 'S_'+str(short_row_id_i)
+                short_row_id_to_row_id[short_row_id] = row_id
+                
+                records.extend(['>'+short_row_id,
                                 MSA_in['alignment'][row_id]
                                ])
             with open(input_MSA_file_path,'w',0) as input_MSA_file_handle:
@@ -472,7 +479,8 @@ class kb_gblocks:
             for line in output_GBLOCKS_file_handle:
                 line = line.rstrip()
                 if line.startswith('>'):
-                    this_id = line[1:]
+                    short_row_id = line[1:]
+                    this_id = short_row_id_to_row_id[short_row_id]
                     output_fasta_buf.append ('>'+re.sub('\s','_',default_row_labels[this_id]))
                     id_order.append(this_id)
                     alignment[this_id] = ''
