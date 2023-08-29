@@ -88,7 +88,7 @@ parameters :
             If first row of MSA has "X" masking characters, remove those positions (columns) from output MSA; Usually used for hypervariable regions (e.g. 16S); OFF=default.
 
 description : |
-    <p>Gblocks 0.91b from http://molevol.cmima.csic.es/castresana/Gblocks.html</p>
+    <p>Gblocks 0.91b was originally downloaded from http://molevol.cmima.csic.es/castresana/Gblocks.html.  The server no longer responds, so this App uses a copy that is retained in this KBase module at https://github.com/kbaseapps/kb_gblocks/blob/master/tarballs/Gblocks_Linux64_0.91b.tar.Z</p>
 
     <p><strong>Team members who implemented algorithm in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://kbase.us/support/”>contact us</a>.</p>
 
