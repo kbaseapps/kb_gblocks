@@ -1,6 +1,6 @@
 ### Version 1.0.8
 - handle long gene IDs
-- use own copy of tarball since original gone from web
+- changed tool download to new locations
 
 ### Version 1.0.7
 - removed input widget image from App Docs

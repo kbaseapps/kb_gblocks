@@ -23,15 +23,14 @@ RUN make all
 #
 WORKDIR /kb/module
 
-# GONE
-#    curl http://molevol.cmima.csic.es/castresana/Gblocks/Gblocks_Linux64_0.91b.tar.Z > Gblocks_Linux64_0.91b.tar.Z && \
+# original source has moved.  Maintaining a copy in repo in tarballs dir in case it disappears again
+# old source: http://molevol.cmima.csic.es/castresana/Gblocks/Gblocks_Linux64_0.91b.tar.Z
 
 RUN \
-    cp tarballs/Gblocks_Linux64_0.91b.tar.Z . && \
+    curl -o Gblocks_Linux64_0.91b.tar.Z https://www.biologiaevolutiva.org/jcastresana/Gblocks/Gblocks_Linux64_0.91b.tar.Z && \
     tar xfz Gblocks_Linux64_0.91b.tar.Z && \
     chmod 555 Gblocks_0.91b/Gblocks && \
     cp Gblocks_0.91b/Gblocks ./
-    #ln -s Gblocks_0.91b/Gblocks Gblocks
 
 ENTRYPOINT [ "./scripts/entrypoint.sh" ]
 
